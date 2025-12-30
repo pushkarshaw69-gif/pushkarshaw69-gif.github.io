@@ -1,72 +1,57 @@
-* {
-  box-sizing: border-box;
-}
-
 body {
   margin: 0;
   height: 100vh;
-  background: radial-gradient(circle at center, #0f2027, #000);
-  font-family: Arial, sans-serif;
-  color: #00f2ff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background: linear-gradient(#1b1f2a, #0c0f16);
+  overflow: hidden;
+  font-family: Arial;
 }
 
-/* MAIN CONTAINER */
-.dashboard-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* ROOM */
+.room {
+  position: relative;
   width: 100%;
+  height: 100%;
 }
 
-/* MENU */
-.menu {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+/* CAT */
+.cat {
+  position: absolute;
+  bottom: 60px;
+  left: 50%;
+  width: 120px;
+  height: 120px;
+  background: #ffcc99;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  animation: float 3s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(255,200,150,0.5);
 }
 
-/* BUTTONS */
-.nav-btn {
-  width: 180px;
-  padding: 14px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: none;
-  background: black;
-  color: #00f2ff;
-  font-weight: bold;
+/* CAT FLOAT */
+@keyframes float {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -10px); }
+}
+
+/* OBJECTS */
+.object {
+  position: absolute;
+  padding: 12px 18px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  border-radius: 12px;
   cursor: pointer;
-  box-shadow: 0 0 12px #00f2ff;
-  transition: 0.25s;
+  backdrop-filter: blur(6px);
+  transition: 0.3s;
 }
 
-.nav-btn:hover {
-  background: #00f2ff;
-  color: black;
-  transform: scale(1.05);
+.object:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px white;
 }
 
-/* LOGOUT */
-.logout {
-  width: 180px;
-  padding: 14px;
-  font-size: 16px;
-  border-radius: 10px;
-  border: none;
-  background: black;
-  color: red;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 12px red;
-  transition: 0.25s;
-  margin-top: 30px;
-}
-
-.logout:hover {
-  background: red;
-  color: black;
-  transform: scale(1.05);
-}
+/* POSITIONS */
+.books { top: 20%; left: 15%; }
+.quotes { top: 20%; right: 15%; }
+.links { bottom: 25%; left: 20%; }
+.stuff { bottom: 25%; right: 20%; }
