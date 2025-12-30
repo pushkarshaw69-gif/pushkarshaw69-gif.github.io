@@ -2,8 +2,7 @@ body {
   background: radial-gradient(circle, #0f2027, #000);
   color: #00f2ff;
   font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 40px;
+  padding: 30px;
 }
 
 .container {
@@ -15,51 +14,64 @@ h1 {
   text-align: center;
 }
 
-.add-btn {
-  width: 100%;
-  padding: 12px;
-  background: #00f2ff;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-bottom: 15px;
-}
-
-.form {
-  overflow: hidden;
-  transition: max-height 0.4s ease, opacity 0.4s ease;
-}
-
-.hidden {
-  max-height: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.form input {
+input {
   width: 100%;
   padding: 10px;
-  margin-bottom: 10px;
+  margin: 8px 0;
   background: black;
   border: 1px solid #00f2ff;
   color: #00f2ff;
   border-radius: 6px;
 }
 
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px;
+  background: #00f2ff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.add-btn {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.form.hidden {
+  display: none;
+}
+
 .book {
-  margin-top: 15px;
-  padding: 15px;
   border: 1px solid #00f2ff;
+  padding: 12px;
+  margin-top: 10px;
   border-radius: 8px;
-  box-shadow: 0 0 10px #00f2ff;
 }
 
 .book h3 {
   margin: 0;
 }
 
-.book p {
-  margin: 5px 0;
-  font-size: 14px;
+.book small {
+  color: #aaa;
+}
+
+.book-actions {
+  margin-top: 8px;
+}
+
+.book-actions button {
+  margin-right: 5px;
+  background: red;
+  color: white;
+}
+
+.book-actions button.edit {
+  background: orange;
 }
