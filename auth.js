@@ -4,11 +4,18 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
+// Auto redirect if already logged in
 onAuthStateChanged(auth, user => {
-  if (user) window.location = "dashboard.html";
+  if (user) {
+    window.location.href = "dashboard.html";
+  }
 });
 
+// Login button
 document.getElementById("loginBtn").onclick = () => {
-  signInWithEmailAndPassword(auth, email.value, password.value)
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
     .catch(err => alert(err.message));
 };
