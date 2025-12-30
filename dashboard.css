@@ -8,48 +8,43 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* MENU BOX */
-.game-menu {
-  background: rgba(0, 0, 0, 0.6);
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-  text-align: center;
-  width: 280px;
+/* CENTER MENU */
+.center-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-/* TITLE */
-.title {
-  color: #00f2ff;
-  margin-bottom: 30px;
-  text-shadow: 0 0 10px #00f2ff;
-}
-
-/* BUTTONS */
+/* BUTTON STYLE */
 button {
-  width: 100%;
+  width: 240px;
   padding: 14px;
-  margin: 10px 0;
-  border: none;
-  border-radius: 10px;
   font-size: 16px;
-  background: #00f2ff;
-  color: black;
+  border-radius: 12px;
+  border: none;
+  background: rgba(0, 255, 255, 0.08);
+  color: #00f2ff;
   cursor: pointer;
-  transition: 0.25s;
+  text-shadow: 0 0 5px #00f2ff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+  transition: 0.25s ease;
 }
 
+/* HOVER EFFECT */
 button:hover {
   transform: scale(1.08);
-  box-shadow: 0 0 20px #00f2ff;
+  background: rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 30px #00f2ff;
 }
 
 /* LOGOUT */
 .logout {
-  background: red;
-  color: white;
+  background: rgba(255, 0, 0, 0.15);
+  color: #ff4d4d;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
 }
 
 .logout:hover {
-  box-shadow: 0 0 20px red;
+  background: rgba(255, 0, 0, 0.3);
+  box-shadow: 0 0 25px red;
 }
