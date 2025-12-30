@@ -29,6 +29,23 @@
   <div id="bookList"></div>
 </div>
 
+<!-- EDIT MODAL -->
+<div id="editOverlay" class="overlay hidden">
+  <div class="edit-modal">
+    <h2>Edit Book</h2>
+
+    <input id="editTitle" placeholder="Title">
+    <input id="editAuthor" placeholder="Author">
+    <input id="editCategory" placeholder="Category">
+    <input id="editDate" type="date">
+
+    <div class="modal-buttons">
+      <button onclick="saveEdit()">Save</button>
+      <button class="cancel" onclick="closeEdit()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <script type="module" src="books.js"></script>
 </body>
 </html>
