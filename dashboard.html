@@ -1,25 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard</title>
+  <title>My Room</title>
   <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
 
-<div class="dashboard-container">
+<div class="room">
 
-  <div class="menu">
-    <button class="nav-btn" onclick="location.href='books.html'">Books</button>
-    <button class="nav-btn">Quotes</button>
-    <button class="nav-btn">Links</button>
-    <button class="nav-btn">Images</button>
-    <button class="nav-btn">Stuffs</button>
+  <!-- CAT -->
+  <div class="cat"></div>
 
-    <button id="logoutBtn" class="logout">Logout</button>
-  </div>
+  <!-- OBJECTS -->
+  <div class="object books" onclick="go('books.html')">📚 Books</div>
+  <div class="object quotes">💬 Quotes</div>
+  <div class="object links">🔗 Links</div>
+  <div class="object stuff">📦 Stuff</div>
 
 </div>
 
-<script type="module" src="dashboard.js"></script>
+<script src="dashboard.js"></script>
 </body>
 </html>
