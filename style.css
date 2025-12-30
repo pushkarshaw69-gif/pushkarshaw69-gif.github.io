@@ -1,40 +1,100 @@
+/* =========================
+   GLOBAL STYLES
+========================= */
 body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
   background: #000;
   color: #00f2ff;
-  font-family: Arial;
   text-align: center;
 }
 
+/* =========================
+   LOGIN PAGE
+========================= */
 .cyber-body {
+  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  background: radial-gradient(circle at top, #0f2027, #000);
 }
 
 .cyber-box {
-  background: #050505;
+  background: rgba(0, 0, 0, 0.85);
   padding: 30px;
-  border-radius: 10px;
+  width: 320px;
+  border-radius: 15px;
   box-shadow: 0 0 20px #00f2ff;
 }
 
-input, button {
+.glow {
+  text-shadow: 0 0 10px #00f2ff;
+}
+
+input {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 12px;
+  margin: 8px 0;
   background: black;
   color: #00f2ff;
   border: 1px solid #00f2ff;
+  border-radius: 6px;
+  outline: none;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  background: #00f2ff;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
 button:hover {
-  background: #00f2ff;
-  color: black;
+  background: #00c4cc;
+  box-shadow: 0 0 10px #00f2ff;
 }
 
-img {
-  width: 200px;
+/* =========================
+   DASHBOARD
+========================= */
+h2 {
+  margin-top: 20px;
+}
+
+#logoutBtn {
+  background: red;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 5px;
   margin: 10px;
+  width: auto;
+}
+
+#logoutBtn:hover {
+  background: darkred;
+}
+
+#imageGallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  padding: 20px;
+}
+
+#imageGallery img {
+  width: 100%;
   border-radius: 10px;
+  box-shadow: 0 0 10px #00f2ff;
+  transition: 0.3s;
+}
+
+#imageGallery img:hover {
+  transform: scale(1.05);
 }
