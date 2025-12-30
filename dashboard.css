@@ -8,43 +8,43 @@ body {
   font-family: Arial, sans-serif;
 }
 
-/* CENTER MENU */
+/* MENU */
 .center-menu {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
 
-/* BUTTONS */
+/* BUTTONS (DEFAULT = BLACK) */
 button {
   width: 240px;
   padding: 14px;
   font-size: 16px;
   border-radius: 12px;
   border: none;
-  background: rgba(0, 255, 255, 0.08);
-  color: #00f2ff;
+  background: #000;
+  color: #fff;
   cursor: pointer;
-  text-shadow: 0 0 5px #00f2ff;
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
   transition: 0.25s ease;
 }
 
+/* GLOW ONLY ON HOVER */
 button:hover {
-  transform: scale(1.08);
-  background: rgba(0, 255, 255, 0.2);
-  box-shadow: 0 0 30px #00f2ff;
+  background: #0ff;
+  color: #000;
+  box-shadow: 0 0 25px #00f2ff;
+  transform: scale(1.07);
 }
 
-/* LOGOUT */
+/* LOGOUT BUTTON */
 .logout {
-  background: rgba(255, 0, 0, 0.15);
+  background: #000;
   color: #ff4d4d;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.6);
 }
 
 .logout:hover {
-  background: rgba(255, 0, 0, 0.3);
+  background: red;
+  color: white;
   box-shadow: 0 0 25px red;
 }
 
@@ -56,10 +56,10 @@ button:hover {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(0, 255, 255, 0.2);
-  border: none;
+  background: black;
   color: #00f2ff;
+  border: none;
   font-size: 20px;
   cursor: pointer;
-  box-shadow: 0 0 15px #00f2ff;
+  box-shadow: 0 0 12px #00f2ff;
 }
