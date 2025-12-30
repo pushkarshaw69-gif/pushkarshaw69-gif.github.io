@@ -1,57 +1,58 @@
 body {
   margin: 0;
   height: 100vh;
-  background: linear-gradient(#1b1f2a, #0c0f16);
+  background: black;
   overflow: hidden;
-  font-family: Arial;
 }
 
-/* ROOM */
-.room {
+/* MAIN IMAGE */
+.scene {
   position: relative;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  background: url("your-image-name.png") center/contain no-repeat;
 }
 
-/* CAT */
-.cat {
+/* CLICKABLE ZONES */
+.hotspot {
   position: absolute;
-  bottom: 60px;
-  left: 50%;
-  width: 120px;
-  height: 120px;
-  background: #ffcc99;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  animation: float 3s ease-in-out infinite;
-  box-shadow: 0 0 20px rgba(255,200,150,0.5);
-}
-
-/* CAT FLOAT */
-@keyframes float {
-  0%, 100% { transform: translate(-50%, 0); }
-  50% { transform: translate(-50%, -10px); }
-}
-
-/* OBJECTS */
-.object {
-  position: absolute;
-  padding: 12px 18px;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  border-radius: 12px;
   cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: 0.3s;
 }
 
-.object:hover {
-  transform: scale(1.1);
-  box-shadow: 0 0 15px white;
+/* BOOKS (near fireplace) */
+.books {
+  left: 15%;
+  top: 55%;
+  width: 140px;
+  height: 100px;
 }
 
-/* POSITIONS */
-.books { top: 20%; left: 15%; }
-.quotes { top: 20%; right: 15%; }
-.links { bottom: 25%; left: 20%; }
-.stuff { bottom: 25%; right: 20%; }
+/* LAPTOP */
+.links {
+  left: 55%;
+  top: 55%;
+  width: 160px;
+  height: 110px;
+}
+
+/* WOOL / STUFF */
+.stuff {
+  left: 35%;
+  top: 65%;
+  width: 120px;
+  height: 100px;
+}
+
+/* FRAME */
+.quotes {
+  left: 60%;
+  top: 25%;
+  width: 120px;
+  height: 100px;
+}
+
+/* OPTIONAL: show hover glow */
+.hotspot:hover {
+  outline: 2px solid rgba(0,255,255,0.4);
+  border-radius: 10px;
+}
