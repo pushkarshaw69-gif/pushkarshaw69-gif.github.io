@@ -6,15 +6,31 @@ import {
   where,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+import {
+  onAuthStateChanged,
+  signOut
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 const IMGBB_API = "YOUR_IMGBB_API_KEY";
 
+// Check login
 onAuthStateChanged(auth, user => {
-  if (!user) window.location = "index.html";
-  loadImages();
+  if (!user) {
+    window.location.href = "index.html";
+  } else {
+    loadImages();
+  }
 });
 
+// Logout button
+document.getElementById("logoutBtn").onclick = () => {
+  signOut(auth).then(() => {
+    window.location.href = "index.html";
+  });
+};
+
+// Upload image
 window.uploadImage = () => {
   const file = imgFile.files[0];
   if (!file) return alert("Select an image");
@@ -26,21 +42,28 @@ window.uploadImage = () => {
     method: "POST",
     body: form
   })
-  .then(res => res.json())
-  .then(data => {
-    addDoc(collection(db, "images"), {
-      uid: auth.currentUser.uid,
-      url: data.data.url
+    .then(res => res.json())
+    .then(data => {
+      addDoc(collection(db, "images"), {
+        uid: auth.currentUser.uid,
+        url: data.data.url
+      });
     });
-  });
 };
 
+// Load images
 function loadImages() {
-  const q = query(collection(db, "images"), where("uid", "==", auth.currentUser.uid));
+  const q = query(
+    collection(db, "images"),
+    where("uid", "==", auth.currentUser.uid)
+  );
+
   onSnapshot(q, snap => {
     imageGallery.innerHTML = "";
     snap.forEach(doc => {
-      imageGallery.innerHTML += `<img src="${doc.data().url}">`;
+      imageGallery.innerHTML += `
+        <img src="${doc.data().url}">
+      `;
     });
   });
 }
