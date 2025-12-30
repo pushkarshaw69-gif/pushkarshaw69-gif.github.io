@@ -7,21 +7,48 @@ import {
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-const booksRef = collection(db, "books");
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
+const titleInput = document.getElementById("title");
+const authorInput = document.getElementById("author");
+const coverInput = document.getElementById("cover");
+const dateInput = document.getElementById("date");
+const bookList = document.getElementById("bookList");
+
+let currentUser = null;
+
+// 🔐 WAIT FOR LOGIN
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  currentUser = user;
+  loadBooks();
+});
+
+// ➕ ADD BOOK
 window.addBook = async () => {
+  if (!currentUser) {
+    alert("Not logged in");
+    return;
+  }
+
   const title = titleInput.value.trim();
   const author = authorInput.value.trim();
-  const cover = cover.value.trim();
-  const date = date.value;
+  const cover = coverInput.value.trim();
+  const date = dateInput.value;
 
   if (!title || !author || !date) {
     alert("Fill all fields");
     return;
   }
 
-  await addDoc(booksRef, {
-    uid: auth.currentUser.uid,
+  await addDoc(collection(db, "books"), {
+    uid: currentUser.uid,
     title,
     author,
     cover,
@@ -30,15 +57,16 @@ window.addBook = async () => {
 
   titleInput.value = "";
   authorInput.value = "";
-  cover.value = "";
-  date.value = "";
+  coverInput.value = "";
+  dateInput.value = "";
 };
 
-const titleInput = document.getElementById("title");
-const authorInput = document.getElementById("author");
-
-const loadBooks = () => {
-  const q = query(booksRef, where("uid", "==", auth.currentUser.uid));
+// 📚 LOAD BOOKS
+function loadBooks() {
+  const q = query(
+    collection(db, "books"),
+    where("uid", "==", currentUser.uid)
+  );
 
   onSnapshot(q, snapshot => {
     bookList.innerHTML = "";
@@ -58,6 +86,4 @@ const loadBooks = () => {
       `;
     });
   });
-};
-
-loadBooks();
+}
