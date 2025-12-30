@@ -30,13 +30,11 @@ body {
   font-weight: bold;
   cursor: pointer;
   box-shadow: 0 0 10px #00f2ff;
-  transition: 0.2s;
 }
 
 .nav-btn:hover {
   background: #00f2ff;
   color: #000;
-  transform: scale(1.05);
 }
 
 .logout {
@@ -46,14 +44,10 @@ body {
   box-shadow: 0 0 10px red;
 }
 
-/* MAIN CONTENT */
+/* CONTENT */
 .content {
   margin-left: 220px;
   padding: 30px;
-}
-
-.section {
-  margin-top: 20px;
 }
 
 input[type="file"] {
