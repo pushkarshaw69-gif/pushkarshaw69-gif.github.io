@@ -24,11 +24,23 @@
   <button class="logout" onclick="logout()">🚪 Logout</button>
 </div>
 
-<script>
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-app.js";
+  import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
   const music = document.getElementById("bgMusic");
   let playing = false;
 
-  function toggleMusic() {
+  window.toggleMusic = () => {
     if (!playing) {
       music.play();
       playing = true;
@@ -38,15 +50,17 @@
       playing = false;
       document.querySelector(".music-btn").innerText = "▶";
     }
-  }
+  };
 
-  function go(page) {
+  window.go = (page) => {
     window.location.href = page;
-  }
+  };
 
-  function logout() {
-    window.location.href = "index.html";
-  }
+  window.logout = () => {
+    signOut(auth).then(() => {
+      window.location.href = "index.html";
+    });
+  };
 </script>
 
 </body>
