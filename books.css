@@ -1,18 +1,22 @@
+/* ===== BASE ===== */
 body {
   background: radial-gradient(circle, #0f2027, #000);
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   color: #00f2ff;
   padding: 20px;
 }
 
+/* ===== TITLE ===== */
 .title {
   text-align: center;
 }
 
+/* ===== CONTROLS ===== */
 .controls {
   display: flex;
   gap: 10px;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .controls input,
@@ -26,77 +30,7 @@ body {
   color: #00f2ff;
 }
 
-#toggleForm {
-  display: block;
-  margin: 15px auto;
-}
-
-.book-card {
-  border: 2px solid rgba(0,255,255,.5);
-  padding: 16px;
-  border-radius: 12px;
-  margin: 15px auto;
-  max-width: 520px;
-  box-shadow: 0 0 12px rgba(0,255,255,.4);
-}
-
-.book-header {
-  font-size: 20px;
-  font-weight: bold;
-  display: flex;
-  gap: 8px;
-}
-
-.book-author {
-  color: #ccc;
-}
-
-.book-meta {
-  margin-top: 6px;
-  font-size: 14px;
-  color: #aaa;
-}
-
-.book-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 15px;
-}
-
-.book-actions button {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-}
-
-.book-actions button:hover {
-  transform: scale(1.2);
-}
-
-.confirm {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.7);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.confirm-box {
-  background: black;
-  padding: 20px;
-  border-radius: 12px;
-  border: 2px solid red;
-  text-align: center;
-}
-
-.confirm-actions {
-  margin-top: 10px;
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-}
+/* ===== ADD BUTTON ===== */
 #toggleForm {
   display: block;
   margin: 15px auto;
@@ -113,29 +47,93 @@ body {
   color: black;
 }
 
-.book-header {
-  font-size: 20px;
-  font-weight: bold;
+/* ===== BOOK CARD ===== */
+.book-card {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00f2ff;
+  padding: 15px;
+  margin: 15px auto;
+  max-width: 520px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
 }
 
-.book-header span {
+/* TOP ROW */
+.book-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* TITLE */
+.book-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #00f2ff;
+}
+
+.book-author {
   font-size: 16px;
   color: #aaa;
 }
 
+/* META */
+.book-meta {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+/* ACTION BUTTONS */
+.book-actions {
+  display: flex;
+  gap: 10px;
+}
+
 .book-actions button {
-  font-size: 22px;
   background: none;
   border: none;
+  font-size: 22px;
   cursor: pointer;
+  color: #00f2ff;
+  transition: 0.2s;
 }
+
+.book-actions button:hover {
+  transform: scale(1.2);
+  color: white;
+}
+
+/* ===== CONFIRM DELETE ===== */
+.confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.confirm-box {
+  background: black;
+  padding: 20px;
+  border-radius: 12px;
+  border: 2px solid red;
+  text-align: center;
+}
+
+.confirm-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
 /* ===== EDIT POPUP ===== */
 .edit-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  inset: 0;
   background: rgba(0,0,0,0.6);
   backdrop-filter: blur(6px);
   display: flex;
@@ -157,7 +155,6 @@ body {
 .edit-box h3 {
   color: #00f2ff;
   text-align: center;
-  margin-bottom: 10px;
 }
 
 .edit-box input {
@@ -193,56 +190,22 @@ body {
   color: white;
 }
 
+/* ===== UTIL ===== */
 .hidden {
   display: none;
 }
-.book-card {
-  position: relative;
-  padding: 15px;
-  margin-bottom: 15px;
-  border: 2px solid #00f2ff;
-  border-radius: 12px;
-  box-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
-}
 
-.book-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
+/* ===== MOBILE ===== */
+@media (max-width: 600px) {
+  .book-title {
+    font-size: 18px;
+  }
 
-.book-title {
-  font-size: 22px;
-  font-weight: bold;
-  color: #00f2ff;
-}
+  .book-author {
+    font-size: 14px;
+  }
 
-.book-author {
-  font-size: 16px;
-  color: #aaa;
-  margin-top: 2px;
-}
-
-.book-meta {
-  margin-top: 8px;
-  font-size: 14px;
-  color: #ccc;
-}
-
-.book-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.book-actions button {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  color: #00f2ff;
-}
-
-.book-actions button:hover {
-  transform: scale(1.2);
-  color: white;
+  .book-actions button {
+    font-size: 20px;
+  }
 }
