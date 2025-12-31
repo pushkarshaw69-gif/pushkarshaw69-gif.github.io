@@ -57,7 +57,7 @@ body {
 /* LOGOUT BUTTON */
 .logout {
   border: 2px solid red;
-  color: red;
+  color: #eb4437;
   box-shadow: 0 0 12px red;
 }
 
