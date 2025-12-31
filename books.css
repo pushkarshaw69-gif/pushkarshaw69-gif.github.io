@@ -58,36 +58,39 @@ body {
   box-shadow: 0 0 15px rgba(0, 242, 255, 0.4);
 }
 
-/* TOP ROW */
+/* ===== TOP ROW ===== */
 .book-top {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
 }
 
-/* TITLE */
+/* TITLE + AUTHOR INLINE */
 .book-title {
   font-size: 22px;
   font-weight: bold;
   color: #00f2ff;
+  display: inline-block;
 }
 
 .book-author {
   font-size: 16px;
   color: #aaa;
+  display: inline-block;
+  margin-left: 8px;
 }
 
 /* META */
 .book-meta {
-  margin-top: 8px;
+  margin-top: 6px;
   font-size: 14px;
   color: #ccc;
 }
 
-/* ACTION BUTTONS */
+/* ===== ACTION BUTTONS ===== */
 .book-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
 }
 
 .book-actions button {
