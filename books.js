@@ -16,6 +16,11 @@ let editingId = null;
 let deleteId = null;
 let currentUser = null;
 
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("bookForm").style.display = "none";
+  document.getElementById("confirmBox").style.display = "none";
+});
+
 const titleInput = document.getElementById("title");
 const authorInput = document.getElementById("author");
 const categoryInput = document.getElementById("category");
@@ -24,7 +29,8 @@ const bookList = document.getElementById("bookList");
 const searchInput = document.getElementById("search");
 
 document.getElementById("toggleForm").onclick = () => {
-  document.getElementById("bookForm").classList.toggle("hidden");
+  const f = document.getElementById("bookForm");
+  f.style.display = f.style.display === "none" ? "block" : "none";
 };
 
 onAuthStateChanged(auth, user => {
@@ -33,7 +39,6 @@ onAuthStateChanged(auth, user => {
   loadBooks();
 });
 
-// ADD / UPDATE
 window.addBook = async () => {
   if (!titleInput.value || !authorInput.value) return;
 
@@ -61,10 +66,8 @@ window.addBook = async () => {
   dateInput.value = "";
 };
 
-// LOAD BOOKS
 function loadBooks() {
   const q = query(collection(db, "books"), where("uid", "==", currentUser.uid));
-
   onSnapshot(q, snap => {
     books = [];
     snap.forEach(d => books.push({ id: d.id, ...d.data() }));
@@ -72,7 +75,6 @@ function loadBooks() {
   });
 }
 
-// RENDER
 function renderBooks(list) {
   bookList.innerHTML = "";
   list.forEach(b => {
@@ -82,11 +84,9 @@ function renderBooks(list) {
           ${b.title}
           <span class="book-author">– ${b.author}</span>
         </div>
-
         <div class="book-meta">
-          📂 ${b.category} &nbsp; | &nbsp; 📅 ${b.date}
+          📂 ${b.category} | 📅 ${b.date}
         </div>
-
         <div class="book-actions">
           <button onclick="editBook('${b.id}')">✏️</button>
           <button onclick="askDelete('${b.id}')">🗑️</button>
@@ -96,20 +96,17 @@ function renderBooks(list) {
   });
 }
 
-// SEARCH
 searchInput.oninput = () => {
   const q = searchInput.value.toLowerCase();
   renderBooks(books.filter(b => b.title.toLowerCase().includes(q)));
 };
 
-// SORT
 window.sortByName = () =>
   renderBooks([...books].sort((a, b) => a.title.localeCompare(b.title)));
 
 window.sortByDate = () =>
   renderBooks([...books].sort((a, b) => new Date(a.date) - new Date(b.date)));
 
-// EDIT
 window.editBook = id => {
   const b = books.find(x => x.id === id);
   titleInput.value = b.title;
@@ -119,10 +116,9 @@ window.editBook = id => {
   editingId = id;
 };
 
-// DELETE
 window.askDelete = id => {
   deleteId = id;
-  document.getElementById("confirmBox").classList.remove("hidden");
+  document.getElementById("confirmBox").style.display = "flex";
 };
 
 window.confirmDelete = async () => {
@@ -132,5 +128,5 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () => {
   deleteId = null;
-  document.getElementById("confirmBox").classList.add("hidden");
+  document.getElementById("confirmBox").style.display = "none";
 };
