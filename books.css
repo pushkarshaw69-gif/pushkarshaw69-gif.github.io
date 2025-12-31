@@ -196,3 +196,53 @@ body {
 .hidden {
   display: none;
 }
+.book-card {
+  position: relative;
+  padding: 15px;
+  margin-bottom: 15px;
+  border: 2px solid #00f2ff;
+  border-radius: 12px;
+  box-shadow: 0 0 12px rgba(0, 242, 255, 0.4);
+}
+
+.book-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.book-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #00f2ff;
+}
+
+.book-author {
+  font-size: 16px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+.book-meta {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #ccc;
+}
+
+.book-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.book-actions button {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #00f2ff;
+}
+
+.book-actions button:hover {
+  transform: scale(1.2);
+  color: white;
+}
