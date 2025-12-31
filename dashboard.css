@@ -55,17 +55,17 @@ body {
 }
 
 /* LOGOUT BUTTON */
-.logout {
-  border: 2px solid #ff2b2b;
-  color: #ff2b2b;
-  background: black;
-  box-shadow: 0 0 15px rgba(255, 43, 43, 0.7);
+.menu button.logout {
+  border: 2px solid #ff2b2b !important;
+  color: #ff2b2b !important;
+  background: black !important;
+  box-shadow: 0 0 15px rgba(255, 43, 43, 0.8) !important;
 }
 
-.logout:hover {
-  background: #ff2b2b;
-  color: black;
-  box-shadow: 0 0 30px rgba(255, 43, 43, 1);
+.menu button.logout:hover {
+  background: #ff2b2b !important;
+  color: black !important;
+  box-shadow: 0 0 30px rgba(255, 43, 43, 1) !important;
 }
 
 /* MUSIC BUTTON */
