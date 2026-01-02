@@ -1,41 +1,29 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8">
-
-  <title>ACCESS</title>
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
-
+  <title>Access</title>
   <link rel="stylesheet" href="index.css">
-
 </head>
-
 <body>
 
 <canvas id="neural"></canvas>
 
 <div class="login-box">
-
-  <h1 class="glitch" data-text="ACCESS">ACCESS</h1>
-
+  <h1 class="glitch">ACCESS</h1>
   <p class="sub">Enter the system</p>
 
-  <input type="email" placeholder="Email">
+  <input id="email" type="email" placeholder="Email">
+  <input id="password" type="password" placeholder="Password">
 
-  <input type="password" placeholder="Password">
-
-  <button onclick="login()">ENTER</button>
-
+  <button id="loginBtn">ENTER</button>
 </div>
 
+<!-- UI animation -->
 <script src="index.js"></script>
 
-</body>
+<!-- AUTH ONLY -->
+<script type="module" src="auth.js"></script>
 
+</body>
 </html>
