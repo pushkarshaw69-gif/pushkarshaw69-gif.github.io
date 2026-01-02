@@ -38,7 +38,17 @@ onAuthStateChanged(auth, user => {
     <button onclick="go('quotes.html')">QUOTES</button>
     <button onclick="go('links.html')">LINKS</button>
     <button onclick="go('stuff.html')">STUFF</button>
-    <button class="logout" onclick="logout()">DISCONNECT</button>
+    <button onclick="logout()">DISCONNECT</button>
+
+<script type="module">
+import { auth } from "./firebase.js";
+import { signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+
+window.logout = async function () {
+  await signOut(auth);
+  window.location.href = "index.html";
+};
+</script>
   </div>
 </div>
 
@@ -88,4 +98,5 @@ onAuthStateChanged(auth, user => {
 <script src="matrix.js"></script>
 </body>
 </html>
+
 
