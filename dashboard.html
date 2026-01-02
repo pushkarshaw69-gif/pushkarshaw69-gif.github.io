@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Matrix Dashboard</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+<!-- MATRIX BACKGROUND -->
+<canvas id="matrix"></canvas>
+
+<!-- MUSIC -->
+<audio id="bgMusic" loop>
+  <source src="bg-music.mp3" type="audio/mpeg">
+</audio>
+
+<button class="music-btn" onclick="toggleMusic()">▶</button>
+
+<div class="container">
+  <h1 class="title glitch" id="title" data-text="WAKE UP_">WAKE UP_</h1>
+
+  <div class="menu">
+    <button onclick="go('books.html')">BOOKS</button>
+    <button onclick="go('quotes.html')">QUOTES</button>
+    <button onclick="go('links.html')">LINKS</button>
+    <button onclick="go('stuff.html')">STUFF</button>
+    <button class="logout" onclick="logout()">DISCONNECT</button>
+  </div>
+</div>
+
+<script>
+  // Navigation
+  function go(page) {
+    window.location.href = page;
+  }
+
+  function logout() {
+    window.location.href = "index.html";
+  }
+
+  // Music
+  const music = document.getElementById("bgMusic");
+  let playing = false;
+
+  function toggleMusic() {
+    if (!playing) {
+      music.play();
+      playing = true;
+      document.querySelector(".music-btn").innerText = "⏸";
+    } else {
+      music.pause();
+      playing = false;
+      document.querySelector(".music-btn").innerText = "▶";
+    }
+  }
+
+  // Random Quotes
+  const quotes = [
+    "WAKE UP_",
+    "REALITY IS A CONSTRUCT_",
+    "YOU ARE AWAKE_",
+    "CONTROL BEGINS IN THE MIND_",
+    "THINK FOR YOURSELF_",
+    "EXISTENCE PRECEDES ESSENCE_",
+    "SYSTEM ONLINE_"
+  ];
+
+  const title = document.getElementById("title");
+  const q = quotes[Math.floor(Math.random() * quotes.length)];
+  title.innerText = q;
+  title.setAttribute("data-text", q);
+</script>
+
+<script src="matrix.js"></script>
+</body>
+</html>

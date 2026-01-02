@@ -1,0 +1,130 @@
+body {
+  margin: 0;
+  background: black;
+  font-family: 'Share Tech Mono', monospace;
+  overflow: hidden;
+  color: #00ff9c;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* Container */
+.container {
+  text-align: center;
+  margin-top: 20vh;
+}
+
+/* Title */
+.title {
+  font-size: 3rem;
+  color: #00ff9c;
+  text-shadow: 0 0 15px #00ff9c;
+}
+
+/* Title */
+.title {
+  font-size: 3rem;
+  color: #00ff9c;
+  text-shadow: 0 0 15px #00ff9c;
+}
+
+/* Glitch */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.glitch::before {
+  color: #00ff9c;
+  transform: translate(-2px, 0);
+  animation: glitch1 2s infinite;
+}
+
+.glitch::after {
+  color: #00cc88;
+  transform: translate(2px, 0);
+  animation: glitch2 1.5s infinite;
+}
+
+@keyframes glitch1 {
+  0% { transform: translate(0); }
+  25% { transform: translate(-2px, -2px); }
+  50% { transform: translate(2px, 2px); }
+  75% { transform: translate(-1px, 1px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes glitch2 {
+  0% { transform: translate(0); }
+  25% { transform: translate(2px, 1px); }
+  50% { transform: translate(-2px, -1px); }
+  75% { transform: translate(1px, -1px); }
+  100% { transform: translate(0); }
+}
+
+
+/* Menu */
+.menu {
+  margin-top: 40px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.menu button {
+  background: transparent;
+  border: 2px solid #00ff9c;
+  color: #00ff9c;
+  padding: 12px 26px;
+  font-size: 16px;
+  cursor: pointer;
+  box-shadow: 0 0 12px #00ff9c;
+}
+
+.menu button:hover {
+  background: #00ff9c;
+  color: black;
+}
+
+/* Logout */
+.logout {
+  border-color: #ff2b2b;
+  color: #ff2b2b;
+  box-shadow: 0 0 12px #ff2b2b;
+}
+
+.logout:hover {
+  background: #ff2b2b;
+  color: black;
+}
+
+/* Music Button */
+.music-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  border: 2px solid #00ff9c;
+  background: black;
+  color: #00ff9c;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 12px #00ff9c;
+}
