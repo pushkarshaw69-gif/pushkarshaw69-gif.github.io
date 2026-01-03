@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const letters = "012345";
+const letters = "0123456789";
 const fontSize = 16;
 const columns = canvas.width / fontSize;
 const drops = Array.from({ length: columns }).fill(1);
@@ -29,4 +29,5 @@ function draw() {
 }
 
 setInterval(draw, 33);
+
 
