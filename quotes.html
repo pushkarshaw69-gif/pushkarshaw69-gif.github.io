@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quotes</title>
+  <link rel="stylesheet" href="quotes.css">
+</head>
+<body>
+
+<h1 class="title">💬 QUOTE VAULT</h1>
+
+<div class="controls">
+  <input id="search" placeholder="Search quotes...">
+  <button onclick="sortByAuthor()">Sort A–Z (Author)</button>
+  <button onclick="sortByDate()">Sort by Date</button>
+</div>
+
+<button id="toggleForm">➕ Add Quote</button>
+
+<div id="quoteForm" class="hidden">
+  <textarea id="quoteText" placeholder="Quote"></textarea>
+  <input id="author" placeholder="Author">
+  <input id="date" type="date">
+  <button onclick="addQuote()">Save</button>
+</div>
+
+<div id="quoteList"></div>
+
+<!-- DELETE CONFIRM -->
+<div id="confirmBox" class="confirm hidden">
+  <div class="confirm-box">
+    <p>Delete this quote?</p>
+    <div class="confirm-actions">
+      <button onclick="confirmDelete()">Yes</button>
+      <button onclick="closeConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT POPUP -->
+<div id="editOverlay" class="edit-overlay hidden">
+  <div class="edit-box">
+    <h3>Edit Quote</h3>
+    <textarea id="editQuote"></textarea>
+    <input id="editAuthor">
+    <input id="editDate" type="date">
+    <div class="edit-actions">
+      <button onclick="saveEdit()">💾 Save</button>
+      <button class="cancel" onclick="closeEdit()">✖ Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="quotes.js"></script>
+</body>
+</html>
