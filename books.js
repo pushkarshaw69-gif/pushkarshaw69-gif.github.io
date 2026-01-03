@@ -163,3 +163,10 @@ window.closeConfirm = () =>
 window.addEventListener("DOMContentLoaded", () => {
   bookForm.classList.add("hidden");
 });
+editOverlay.addEventListener("click", e => {
+  if (e.target === editOverlay) closeEdit();
+});
+
+document.getElementById("confirmBox").addEventListener("click", e => {
+  if (e.target.id === "confirmBox") closeConfirm();
+});
