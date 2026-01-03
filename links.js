@@ -12,6 +12,8 @@ let user = null;
 
 const linkForm = document.getElementById("linkForm");
 const linkList = document.getElementById("linkList");
+const confirmBox = document.getElementById("confirmBox");
+const editOverlay = document.getElementById("editOverlay");
 
 toggleForm.onclick = () => linkForm.classList.toggle("hidden");
 
@@ -28,6 +30,7 @@ window.addLink = async () => {
     name: name.value,
     desc: desc.value
   });
+
   linkForm.classList.add("hidden");
   type.value = name.value = desc.value = "";
 };
@@ -52,7 +55,7 @@ function render(list) {
           <span>${l.desc}</span>
         </div>
         <div class="link-actions">
-          <button onclick="edit('${l.id}')">✏️</button>
+          <button onclick="openEdit('${l.id}')">✏️</button>
           <button onclick="askDelete('${l.id}')">🗑️</button>
         </div>
       </div>
@@ -60,21 +63,51 @@ function render(list) {
   });
 }
 
+/* SORT */
 window.sortByName = () =>
   render([...links].sort((a,b)=>a.name.localeCompare(b.name)));
 
 window.sortByType = () =>
   render([...links].sort((a,b)=>a.type.localeCompare(b.type)));
 
+/* EDIT */
+window.openEdit = id => {
+  const l = links.find(x => x.id === id);
+  editId = id;
+
+  editType.value = l.type;
+  editName.value = l.name;
+  editDesc.value = l.desc;
+
+  editOverlay.classList.remove("hidden");
+};
+
+window.saveEdit = async () => {
+  await updateDoc(doc(db, "links", editId), {
+    type: editType.value,
+    name: editName.value,
+    desc: editDesc.value
+  });
+  closeEdit();
+};
+
+window.closeEdit = () => {
+  editId = null;
+  editOverlay.classList.add("hidden");
+};
+
+/* DELETE */
 window.askDelete = id => {
   deleteId = id;
   confirmBox.classList.remove("hidden");
 };
 
 window.confirmDelete = async () => {
-  await deleteDoc(doc(db,"links",deleteId));
+  await deleteDoc(doc(db, "links", deleteId));
   closeConfirm();
 };
 
-window.closeConfirm = () =>
+window.closeConfirm = () => {
+  deleteId = null;
   confirmBox.classList.add("hidden");
+};
