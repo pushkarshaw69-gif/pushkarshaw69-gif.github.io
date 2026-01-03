@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<h1 class="title">📚 My Books</h1>
+<h1 class="title">📚 BOOK ARCHIVE</h1>
 
 <div class="controls">
   <input id="search" placeholder="Search books...">
@@ -17,7 +17,7 @@
 
 <button id="toggleForm">➕ Add Book</button>
 
-<div id="bookForm" style="display:none;">
+<div id="bookForm" class="hidden">
   <input id="title" placeholder="Book Title">
   <input id="author" placeholder="Author">
   <input id="category" placeholder="Category">
@@ -27,8 +27,8 @@
 
 <div id="bookList"></div>
 
-<!-- Delete Confirmation -->
-<div id="confirmBox" class="confirm" style="display:none;">
+<!-- DELETE CONFIRM -->
+<div id="confirmBox" class="confirm hidden">
   <div class="confirm-box">
     <p>Delete this book?</p>
     <div class="confirm-actions">
@@ -38,22 +38,21 @@
   </div>
 </div>
 
-<script type="module" src="books.js"></script>
-  <!-- EDIT POPUP -->
+<!-- EDIT POPUP -->
 <div id="editOverlay" class="edit-overlay hidden">
   <div class="edit-box">
     <h3>Edit Book</h3>
-
-    <input id="editTitle" placeholder="Book Title">
-    <input id="editAuthor" placeholder="Author">
-    <input id="editCategory" placeholder="Category">
+    <input id="editTitle">
+    <input id="editAuthor">
+    <input id="editCategory">
     <input id="editDate" type="date">
-
     <div class="edit-actions">
       <button onclick="saveEdit()">💾 Save</button>
       <button class="cancel" onclick="closeEdit()">✖ Cancel</button>
     </div>
   </div>
 </div>
+
+<script type="module" src="books.js"></script>
 </body>
 </html>
