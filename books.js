@@ -104,8 +104,16 @@ function renderBooks(list) {
 
 searchInput.oninput = () => {
   const q = searchInput.value.toLowerCase();
-  renderBooks(books.filter(b => b.title.toLowerCase().includes(q)));
+
+  renderBooks(
+    books.filter(b =>
+      b.title.toLowerCase().includes(q) ||
+      b.author.toLowerCase().includes(q) ||
+      b.category.toLowerCase().includes(q)
+    )
+  );
 };
+
 
 window.sortByName = () =>
   renderBooks([...books].sort((a, b) => a.title.localeCompare(b.title)));
