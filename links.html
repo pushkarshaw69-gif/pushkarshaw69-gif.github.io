@@ -11,45 +11,44 @@
 
 <div class="controls">
   <input id="search" placeholder="Search links...">
-  <button onclick="sortByName()">Sort A–Z</button>
-  <button onclick="sortByType()">Sort by Type</button>
+  <button id="sortName">Sort A–Z</button>
+  <button id="sortType">Sort by Type</button>
 </div>
 
 <button id="toggleForm">➕ Add Link</button>
 
-<!-- ADD LINK FORM -->
 <div id="linkForm" class="hidden">
-  <input id="type" placeholder="Link Type (Article / Tool / Video)">
+  <input id="type" placeholder="Link Type">
   <input id="name" placeholder="Link Name">
   <input id="desc" placeholder="Short Description">
-  <button onclick="addLink()">Save</button>
+  <button id="saveLink">Save</button>
 </div>
 
 <div id="linkList"></div>
 
-<!-- DELETE CONFIRM POPUP -->
+<!-- DELETE -->
 <div id="confirmBox" class="confirm hidden">
   <div class="confirm-box">
     <p>Delete this link?</p>
     <div class="confirm-actions">
-      <button onclick="confirmDelete()">Yes</button>
-      <button onclick="closeConfirm()">Cancel</button>
+      <button id="confirmDeleteBtn">Yes</button>
+      <button id="cancelDeleteBtn">Cancel</button>
     </div>
   </div>
 </div>
 
-<!-- EDIT POPUP -->
+<!-- EDIT -->
 <div id="editOverlay" class="edit-overlay hidden">
   <div class="edit-box">
     <h3>Edit Link</h3>
 
-    <input id="editType" placeholder="Link Type">
-    <input id="editName" placeholder="Link Name">
-    <input id="editDesc" placeholder="Description">
+    <input id="editType">
+    <input id="editName">
+    <input id="editDesc">
 
     <div class="edit-actions">
-      <button onclick="saveEdit()">💾 Save</button>
-      <button class="cancel" onclick="closeEdit()">✖ Cancel</button>
+      <button id="saveEditBtn">💾 Save</button>
+      <button class="cancel" id="cancelEditBtn">✖ Cancel</button>
     </div>
   </div>
 </div>
