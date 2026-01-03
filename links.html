@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Link Archive</title>
+  <link rel="stylesheet" href="links.css">
+</head>
+<body>
+
+<h1 class="title">🔗 LINK ARCHIVE</h1>
+
+<div class="controls">
+  <input id="search" placeholder="Search links...">
+  <button onclick="sortByName()">Sort A–Z</button>
+  <button onclick="sortByType()">Sort by Type</button>
+</div>
+
+<button id="toggleForm">➕ Add Link</button>
+
+<!-- ADD FORM -->
+<div id="linkForm" class="hidden">
+  <input id="type" placeholder="Type (Article / Video / Tool)">
+  <input id="name" placeholder="Name">
+  <input id="desc" placeholder="Description">
+  <button onclick="addLink()">Save</button>
+</div>
+
+<div id="linkList"></div>
+
+<!-- DELETE CONFIRM -->
+<div id="confirmBox" class="confirm hidden">
+  <div class="confirm-box">
+    <p>Delete this link?</p>
+    <div class="confirm-actions">
+      <button onclick="confirmDelete()">Yes</button>
+      <button onclick="closeConfirm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- EDIT POPUP -->
+<div id="editOverlay" class="edit-overlay hidden">
+  <div class="edit-box">
+    <h3>Edit Link</h3>
+    <input id="editType">
+    <input id="editName">
+    <input id="editDesc">
+    <div class="edit-actions">
+      <button onclick="saveEdit()">💾 Save</button>
+      <button class="cancel" onclick="closeEdit()">✖ Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="links.js"></script>
+</body>
+</html>
