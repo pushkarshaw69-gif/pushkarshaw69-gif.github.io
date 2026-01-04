@@ -6,7 +6,7 @@ canvas.height = window.innerHeight;
 
 const letters = "0123456789";
 const fontSize = 16;
-const columns = canvas.width / fontSize;
+const columns = Math.floor(canvas.width / fontSize);
 const drops = Array.from({ length: columns }).fill(1);
 
 function draw() {
@@ -18,19 +18,20 @@ function draw() {
 
   for (let i = 0; i < drops.length; i++) {
     const text = letters[Math.floor(Math.random() * letters.length)];
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+    /* 🔥 FIX: snap to whole rows */
+    ctx.fillText(
+      text,
+      i * fontSize,
+      Math.floor(drops[i]) * fontSize
+    );
 
     if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
       drops[i] = 0;
     }
 
-    drops[i] += 0.2; // try 0.2 – 0.6
+    drops[i] += 0.2; // slow rain, no overlap
   }
 }
 
 setInterval(draw, 33);
-
-
-
-
-
