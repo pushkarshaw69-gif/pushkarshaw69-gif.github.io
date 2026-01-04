@@ -1,19 +1,13 @@
-/* ===============================
-   LIBRARY TYPE DETECTION
-================================ */
 const params = new URLSearchParams(window.location.search);
 const libraryType = params.get("type"); // fiction | nonfiction
 
-if (!libraryType) {
-  location.replace("fnf.html"); // replace prevents back-flash
-} else {
-  document.documentElement.style.visibility = "visible";
-}
+const body = document.body;
 
-const COLLECTION_NAME =
-  libraryType === "fiction"
-    ? "books_fiction"
-    : "books_nonfiction";
+if (!libraryType) {
+  location.replace("fnf.html");
+} else {
+  body.classList.remove("hidden");
+}
 
 /* ===============================
    IMPORTS
@@ -224,4 +218,5 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
+
 
