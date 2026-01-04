@@ -10,7 +10,7 @@ const columns = Math.floor(canvas.width / fontSize);
 const drops = Array.from({ length: columns }).fill(1);
 
 function draw() {
-  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillStyle = "rgba(0, 0, 0, 0.15)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "#00ff9c";
@@ -35,5 +35,6 @@ function draw() {
 }
 
 setInterval(draw, 80);
+
 
 
