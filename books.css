@@ -1,3 +1,8 @@
+/* PREVENT FLASH */
+html {
+  visibility: hidden;
+}
+
 body {
   background: black;
   color: #00ff9c;
@@ -192,3 +197,4 @@ body {
   transform: translateY(-8px);
   box-shadow: 0 0 45px rgba(0,255,156,.9);
 }
+
