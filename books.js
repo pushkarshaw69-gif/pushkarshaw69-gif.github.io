@@ -1,3 +1,21 @@
+/* ===============================
+   LIBRARY TYPE DETECTION
+================================ */
+const params = new URLSearchParams(window.location.search);
+const libraryType = params.get("type"); // fiction | nonfiction
+
+if (!libraryType) {
+  location.href = "fnf.html";
+}
+
+const COLLECTION_NAME =
+  libraryType === "fiction"
+    ? "books_fiction"
+    : "books_nonfiction";
+
+/* ===============================
+   IMPORTS
+================================ */
 import { auth, db } from "./firebase.js";
 import {
   collection, addDoc, deleteDoc, updateDoc,
@@ -6,11 +24,17 @@ import {
 import { onAuthStateChanged } from
   "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
+/* ===============================
+   STATE
+================================ */
 let books = [];
 let editingId = null;
 let deleteId = null;
 let currentUser = null;
 
+/* ===============================
+   ELEMENTS
+================================ */
 const titleInput = document.getElementById("title");
 const authorInput = document.getElementById("author");
 const categoryInput = document.getElementById("category");
@@ -29,15 +53,29 @@ const editAuthor = document.getElementById("editAuthor");
 const editCategory = document.getElementById("editCategory");
 const editDate = document.getElementById("editDate");
 
+/* ===============================
+   UI INIT
+================================ */
+document.querySelector(".title").textContent =
+  libraryType === "fiction"
+    ? "📖 FICTION ARCHIVE"
+    : "📚 NON-FICTION ARCHIVE";
+
 document.getElementById("toggleForm").onclick =
   () => bookForm.classList.toggle("hidden");
 
+/* ===============================
+   AUTH
+================================ */
 onAuthStateChanged(auth, user => {
   if (!user) location.href = "index.html";
   currentUser = user;
   loadBooks();
 });
 
+/* ===============================
+   ADD BOOK
+================================ */
 window.addBook = async () => {
   if (!titleInput.value || !authorInput.value) return;
 
@@ -51,7 +89,7 @@ window.addBook = async () => {
     return;
   }
 
-  await addDoc(collection(db, "books"), {
+  await addDoc(collection(db, COLLECTION_NAME), {
     uid: currentUser.uid,
     title: titleInput.value,
     author: authorInput.value,
@@ -64,14 +102,24 @@ window.addBook = async () => {
   titleInput.value = authorInput.value = categoryInput.value = dateInput.value = "";
 };
 
+/* ===============================
+   LOAD BOOKS
+================================ */
 function loadBooks() {
-  const q = query(collection(db, "books"), where("uid", "==", currentUser.uid));
+  const q = query(
+    collection(db, COLLECTION_NAME),
+    where("uid", "==", currentUser.uid)
+  );
+
   onSnapshot(q, snap => {
     books = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderBooks(books);
   });
 }
 
+/* ===============================
+   RENDER
+================================ */
 function renderBooks(list) {
   bookList.innerHTML = "";
 
@@ -85,12 +133,10 @@ function renderBooks(list) {
             ${b.read ? "READ" : "UNREAD"}
           </span>
         </div>
-
         <div>
           <span>${b.category}</span><br>
           <span>${b.date}</span>
         </div>
-
         <div class="book-actions">
           <button onclick="toggleRead('${b.id}', ${b.read})">
             ${b.read ? "✅" : "⬜"}
@@ -102,13 +148,14 @@ function renderBooks(list) {
     `;
   });
 
-  /* UPDATE STATS */
   totalCount.textContent = books.length;
   readCount.textContent = books.filter(b => b.read).length;
   unreadCount.textContent = books.filter(b => !b.read).length;
 }
 
-/* SEARCH */
+/* ===============================
+   SEARCH
+================================ */
 searchInput.oninput = () => {
   const q = searchInput.value.toLowerCase();
   renderBooks(
@@ -120,18 +167,24 @@ searchInput.oninput = () => {
   );
 };
 
-/* SORT */
+/* ===============================
+   SORT
+================================ */
 window.sortByName = () =>
-  renderBooks([...books].sort((a, b) => a.title.localeCompare(b.title)));
+  renderBooks([...books].sort((a,b)=>a.title.localeCompare(b.title)));
 
 window.sortByDate = () =>
-  renderBooks([...books].sort((a, b) => new Date(b.date) - new Date(a.date)));
+  renderBooks([...books].sort((a,b)=>new Date(b.date)-new Date(a.date)));
 
-/* TOGGLE READ */
+/* ===============================
+   TOGGLE READ
+================================ */
 window.toggleRead = async (id, current) =>
-  updateDoc(doc(db, "books", id), { read: !current });
+  updateDoc(doc(db, COLLECTION_NAME, id), { read: !current });
 
-/* EDIT */
+/* ===============================
+   EDIT
+================================ */
 window.editBook = id => {
   const b = books.find(x => x.id === id);
   editingId = id;
@@ -143,7 +196,7 @@ window.editBook = id => {
 };
 
 window.saveEdit = async () => {
-  await updateDoc(doc(db, "books", editingId), {
+  await updateDoc(doc(db, COLLECTION_NAME, editingId), {
     title: editTitle.value,
     author: editAuthor.value,
     category: editCategory.value,
@@ -154,14 +207,16 @@ window.saveEdit = async () => {
 
 window.closeEdit = () => editOverlay.classList.add("hidden");
 
-/* DELETE */
+/* ===============================
+   DELETE
+================================ */
 window.askDelete = id => {
   deleteId = id;
   document.getElementById("confirmBox").classList.remove("hidden");
 };
 
 window.confirmDelete = async () => {
-  await deleteDoc(doc(db, "books", deleteId));
+  await deleteDoc(doc(db, COLLECTION_NAME, deleteId));
   closeConfirm();
 };
 
