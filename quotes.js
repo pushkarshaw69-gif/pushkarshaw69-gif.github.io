@@ -12,11 +12,17 @@ import {
 import { onAuthStateChanged } from
   "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
+/* =====================
+   STATE
+===================== */
 let quotes = [];
 let editingId = null;
 let deleteId = null;
 let currentUser = null;
 
+/* =====================
+   ELEMENTS
+===================== */
 const quoteText = document.getElementById("quoteText");
 const authorInput = document.getElementById("author");
 const dateInput = document.getElementById("date");
@@ -29,29 +35,43 @@ const editQuote = document.getElementById("editQuote");
 const editAuthor = document.getElementById("editAuthor");
 const editDate = document.getElementById("editDate");
 
+/* =====================
+   UI
+===================== */
 document.getElementById("toggleForm").onclick =
   () => quoteForm.classList.toggle("hidden");
 
+/* =====================
+   AUTH
+===================== */
 onAuthStateChanged(auth, user => {
   if (!user) location.href = "index.html";
   currentUser = user;
   loadQuotes();
 });
 
+/* =====================
+   ADD QUOTE
+===================== */
 window.addQuote = async () => {
-  if (!quoteText.value || !authorInput.value) return;
+  if (!quoteText.value.trim()) return;
 
   await addDoc(collection(db, "quotes"), {
     uid: currentUser.uid,
-    text: quoteText.value,
-    author: authorInput.value,
-    date: dateInput.value
+    text: quoteText.value.trim(),
+    author: authorInput.value.trim() || "",
+    date: dateInput.value || ""
   });
 
   quoteForm.classList.add("hidden");
-  quoteText.value = authorInput.value = dateInput.value = "";
+  quoteText.value = "";
+  authorInput.value = "";
+  dateInput.value = "";
 };
 
+/* =====================
+   LOAD QUOTES
+===================== */
 function loadQuotes() {
   const q = query(collection(db, "quotes"), where("uid", "==", currentUser.uid));
   onSnapshot(q, snap => {
@@ -60,8 +80,12 @@ function loadQuotes() {
   });
 }
 
+/* =====================
+   RENDER
+===================== */
 function renderQuotes(list) {
   quoteList.innerHTML = "";
+
   list.forEach(q => {
     quoteList.innerHTML += `
       <div class="quote-row">
@@ -71,53 +95,66 @@ function renderQuotes(list) {
         </div>
 
         <p class="quote-text">“${q.text}”</p>
-        <p class="quote-author">— ${q.author}</p>
+        ${q.author ? `<p class="quote-author">— ${q.author}</p>` : ""}
         ${q.date ? `<p class="quote-date">${q.date}</p>` : ""}
       </div>
     `;
   });
 }
 
+/* =====================
+   SEARCH
+===================== */
 searchInput.oninput = () => {
   const q = searchInput.value.toLowerCase();
   renderQuotes(
     quotes.filter(x =>
       x.text.toLowerCase().includes(q) ||
-      x.author.toLowerCase().includes(q)
+      (x.author && x.author.toLowerCase().includes(q))
     )
   );
 };
 
+/* =====================
+   SORT
+===================== */
 window.sortByAuthor = () =>
   renderQuotes([...quotes].sort((a, b) =>
-    a.author.localeCompare(b.author)
+    (a.author || "").localeCompare(b.author || "")
   ));
 
 window.sortByDate = () =>
   renderQuotes([...quotes].sort((a, b) =>
-    new Date(b.date) - new Date(a.date)
+    new Date(b.date || 0) - new Date(a.date || 0)
   ));
 
+/* =====================
+   EDIT
+===================== */
 window.editQuoteFn = id => {
   const q = quotes.find(x => x.id === id);
   editingId = id;
   editQuote.value = q.text;
-  editAuthor.value = q.author;
-  editDate.value = q.date;
+  editAuthor.value = q.author || "";
+  editDate.value = q.date || "";
   editOverlay.classList.remove("hidden");
 };
 
 window.saveEdit = async () => {
   await updateDoc(doc(db, "quotes", editingId), {
-    text: editQuote.value,
-    author: editAuthor.value,
-    date: editDate.value
+    text: editQuote.value.trim(),
+    author: editAuthor.value.trim() || "",
+    date: editDate.value || ""
   });
   editOverlay.classList.add("hidden");
 };
 
-window.closeEdit = () => editOverlay.classList.add("hidden");
+window.closeEdit = () =>
+  editOverlay.classList.add("hidden");
 
+/* =====================
+   DELETE
+===================== */
 window.askDelete = id => {
   deleteId = id;
   document.getElementById("confirmBox").classList.remove("hidden");
