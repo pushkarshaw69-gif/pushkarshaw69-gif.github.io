@@ -5,7 +5,9 @@ const params = new URLSearchParams(window.location.search);
 const libraryType = params.get("type"); // fiction | nonfiction
 
 if (!libraryType) {
-  location.href = "fnf.html";
+  location.replace("fnf.html"); // replace prevents back-flash
+} else {
+  document.documentElement.style.visibility = "visible";
 }
 
 const COLLECTION_NAME =
@@ -222,3 +224,4 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
+
