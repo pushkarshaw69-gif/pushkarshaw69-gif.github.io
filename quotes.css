@@ -37,8 +37,8 @@ body {
 #quoteForm {
   max-width: 600px;
   margin: 15px auto;
-  border: 2px solid #00ff9c;
   padding: 15px;
+  border: 2px solid #00ff9c;
 }
 
 #quoteForm textarea,
@@ -51,20 +51,44 @@ body {
   color: #00ff9c;
 }
 
-.quote-card {
+/* ======================
+   QUOTE ROW (NO CARD)
+====================== */
+.quote-row {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 10px 0;
   position: relative;
-  max-width: 600px;
-  margin: 15px auto;
-  padding: 18px;
-  border: 2px solid #00ff9c;
-  box-shadow: 0 0 15px rgba(0,255,156,.5);
-  background: rgba(0,0,0,.75);
 }
 
+.quote-row::after {
+  content: "";
+  display: block;
+  margin-top: 16px;
+  border-bottom: 1px solid rgba(0,255,156,.4);
+}
+
+.quote-text {
+  font-size: 18px;
+  margin-bottom: 6px;
+  font-style: italic;
+}
+
+.quote-author {
+  font-size: 14px;
+  opacity: .85;
+}
+
+.quote-date {
+  font-size: 12px;
+  opacity: .55;
+}
+
+/* ACTIONS */
 .quote-actions {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 0;
+  right: 0;
 }
 
 .quote-actions button {
@@ -75,19 +99,34 @@ body {
   cursor: pointer;
 }
 
-.quote-text {
-  font-size: 18px;
-  margin-bottom: 10px;
+/* MODALS */
+.edit-overlay,
+.confirm {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.quote-author {
-  font-size: 14px;
-  opacity: .85;
+.edit-box,
+.confirm-box {
+  background: black;
+  border: 2px solid #00ff9c;
+  padding: 20px;
 }
 
-.quote-date {
-  font-size: 12px;
-  opacity: .6;
+.edit-actions,
+.confirm-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.edit-actions .cancel {
+  background: #ff2b2b;
+  color: black;
 }
 
 .hidden {
