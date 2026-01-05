@@ -173,7 +173,7 @@ canvas {
 }
 
 /* ======================
-   GLITCH TRANSITION
+   FAST BUT LONG GLITCH
 ====================== */
 body {
   opacity: 0;
@@ -182,100 +182,46 @@ body {
 /* ENTRY */
 body.page-loaded {
   opacity: 1;
-  animation: glitchIn 0.35s steps(2);
+  animation: glitchIn 1.1s steps(8);
 }
 
 /* EXIT */
 body.page-exit {
-  animation: glitchOut 0.35s steps(2);
-}
-
-/* ENTRY GLITCH */
-@keyframes glitchIn {
-  0% {
-    filter: contrast(3) brightness(1.6) blur(2px);
-    transform: translateX(-3px);
-  }
-  50% {
-    filter: contrast(1.8) brightness(1.2);
-    transform: translateX(3px);
-  }
-  100% {
-    filter: none;
-    transform: none;
-  }
-}
-
-/* EXIT GLITCH */
-@keyframes glitchOut {
-  0% {
-    filter: none;
-    transform: none;
-  }
-  50% {
-    filter: contrast(2.5) brightness(1.4) blur(2px);
-    transform: translateX(2px);
-  }
-  100% {
-    filter: contrast(3) brightness(1.8) blur(4px);
-    transform: translateX(-2px);
-    opacity: 0;
-  }
-}
-
-/* ======================
-   EXTREME GLITCH TRANSITION
-====================== */
-body {
-  opacity: 0;
-}
-
-/* ENTRY */
-body.page-loaded {
-  opacity: 1;
-  animation: glitchIn 1.1s steps(4);
-}
-
-/* EXIT */
-body.page-exit {
-  animation: glitchOut 1.1s steps(4);
+  animation: glitchOut 1.1s steps(8);
   pointer-events: none;
 }
 
 /* ENTRY GLITCH */
 @keyframes glitchIn {
   0% {
-    filter:
-      contrast(6)
-      brightness(2.2)
-      blur(6px)
+    filter: contrast(6) brightness(2.2) blur(4px)
       drop-shadow(6px 0 red)
       drop-shadow(-6px 0 cyan);
     transform: translate(-12px, 4px) skewX(-6deg);
   }
-  25% {
-    filter:
-      contrast(4)
-      brightness(1.8)
-      blur(4px)
-      drop-shadow(-4px 0 magenta)
-      drop-shadow(4px 0 lime);
+
+  15% {
     transform: translate(10px, -6px) skewX(6deg);
   }
-  50% {
-    filter:
-      contrast(3)
-      brightness(1.4)
-      blur(3px);
-    transform: translate(-8px, 5px);
+
+  30% {
+    filter: contrast(4) brightness(1.6) blur(3px);
+    transform: translate(-8px, 6px);
   }
+
+  45% {
+    transform: translate(12px, -4px) skewX(-5deg);
+  }
+
+  60% {
+    filter: contrast(5) brightness(2) blur(4px);
+    transform: translate(-10px, 5px);
+  }
+
   75% {
-    filter:
-      contrast(2)
-      brightness(1.2)
-      blur(2px);
-    transform: translate(6px, -3px);
+    transform: translate(8px, -3px) skewX(4deg);
   }
+
   100% {
     filter: none;
     transform: none;
@@ -289,24 +235,28 @@ body.page-exit {
     transform: none;
     opacity: 1;
   }
-  30% {
-    filter:
-      contrast(4)
-      brightness(1.6)
-      blur(4px)
-      drop-shadow(5px 0 red)
-      drop-shadow(-5px 0 cyan);
-    transform: translate(8px, -4px) skewX(4deg);
+
+  20% {
+    filter: contrast(4) brightness(1.6) blur(3px)
+      drop-shadow(6px 0 red)
+      drop-shadow(-6px 0 cyan);
+    transform: translate(8px, -4px);
   }
-  65% {
-    filter:
-      contrast(6)
-      brightness(2.4)
-      blur(7px)
-      drop-shadow(-8px 0 magenta)
-      drop-shadow(8px 0 lime);
+
+  40% {
+    filter: contrast(6) brightness(2.2) blur(5px);
     transform: translate(-12px, 6px) skewX(-6deg);
   }
+
+  60% {
+    transform: translate(10px, -5px);
+  }
+
+  80% {
+    filter: contrast(7) brightness(2.6) blur(6px);
+    transform: translate(-14px, 7px) skewX(6deg);
+  }
+
   100% {
     opacity: 0;
   }
