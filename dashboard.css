@@ -136,7 +136,7 @@ body {
     grid-template-columns: 1fr;
     gap: 16px;
     padding: 0 16px;
-    transform: scale(0.92);
+    transform: scale(0.90);
     transform-origin: center;
     max-width: 420px;
     margin-inline: auto;
@@ -144,7 +144,7 @@ body {
 
   .menu-link {
     font-size: 18px;
-    padding: 16px 24px;
+    padding: 16px 28px;
     width: 100%;
     font-weight: 500;
   }
@@ -157,6 +157,7 @@ body {
     margin-bottom: 30px;
   }
 }
+
 
 
 
