@@ -100,11 +100,18 @@ body {
 }
 
 /* ======================
-   MOBILE
+   MOBILE FIX (FOR REAL PHONES)
 ====================== */
-@media (max-width: 768px) {
+@media (max-width: 900px), (orientation: portrait) {
   .menu {
     grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 0 14px;
+  }
+
+  .menu-link {
+    font-size: 18px;
+    padding: 16px 0;
   }
 
   .menu-link.full {
@@ -131,3 +138,4 @@ body {
 .music-btn:hover {
   box-shadow: 0 0 20px rgba(0,255,156,.9);
 }
+
