@@ -127,3 +127,27 @@ body {
   background: #ff2b2b;
   color: black;
 }
+
+#toggleForm {
+  padding: 8px 14px;
+  border: 2px solid #00ff9c;
+  background: black;
+  color: #00ff9c;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,255,156,.4);
+  cursor: pointer;
+}
+
+#linkForm {
+  max-width: 900px;
+  margin: 10px auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr auto;
+  gap: 10px;
+}
+
+@media (max-width: 700px) {
+  #linkForm {
+    grid-template-columns: 1fr;
+  }
+}
