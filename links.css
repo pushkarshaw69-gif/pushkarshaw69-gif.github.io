@@ -8,7 +8,7 @@ body {
 /* TITLE */
 .title {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 /* CONTROLS */
@@ -22,39 +22,87 @@ body {
 .controls input,
 .controls button,
 #linkForm input,
-#linkForm button {
-  padding: 8px;
+#linkForm button,
+#toggleForm,
+#linkForm select,
+.edit-box select {
+  padding: 8px 14px;
   border: 2px solid #00ff9c;
   background: black;
   color: #00ff9c;
   border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,255,156,.4);
 }
 
 /* ADD BUTTON */
 #toggleForm {
   display: block;
+  margin: 12px auto;
+  cursor: pointer;
+}
+
+/* ADD FORM */
+#linkForm {
+  max-width: 900px;
   margin: 10px auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr 2fr 2fr auto;
+  gap: 10px;
+}
+
+@media (max-width: 700px) {
+  #linkForm {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* LINK ROW */
 .link-row {
+  border: 2px solid #00ff9c;
+  margin: 10px auto;
+  max-width: 900px;
+  padding: 12px;
+  box-shadow: 0 0 12px rgba(0,255,156,.35);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 2px solid #00ff9c;
-  padding: 8px 14px;
-  margin: 6px auto;
-  max-width: 900px;
-  box-shadow: 0 0 12px rgba(0,255,156,.35);
 }
 
+/* LINK DETAILS */
 .link-text {
   display: flex;
-  gap: 20px;
+  flex-direction: column;
+  gap: 6px;
   font-size: 14px;
-  flex-wrap: wrap;
 }
 
+.link-text > * {
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(0,255,156,0.25);
+}
+
+.link-text > *:last-child {
+  border-bottom: none;
+}
+
+/* COPY LINK */
+.copy-link {
+  cursor: pointer;
+  color: #00eaff;
+  text-decoration: none;
+}
+
+/* TAGS */
+.tag {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 6px;
+  border: 1px solid #00ff9c;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* ACTIONS */
 .link-actions {
   display: flex;
   gap: 12px;
@@ -68,34 +116,32 @@ body {
   cursor: pointer;
 }
 
-/* -------------------------
-   VISIBILITY CONTROL (FIX)
-------------------------- */
+/* TYPE COLORS */
+.type.video { color: #00e5ff; }
+.type.article { color: #00ff9c; }
+.type.tool { color: #ffd000; }
+.type.code { color: #ff7bff; }
+.type.reference { color: #ff914d; }
+.type.list { color: #9cff00; }
+
+/* VISIBILITY */
 .hidden {
   display: none !important;
 }
 
-/* -------------------------
-   OVERLAYS (FIXED)
-   ❌ no vertical centering
-   ❌ no view blocking
-------------------------- */
+/* OVERLAYS */
 .confirm,
 .edit-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.75);
   z-index: 999;
-
   display: flex;
   justify-content: center;
   align-items: flex-start;
-
   padding-top: 20px;
-  overflow-y: auto;
 }
 
-/* POPUP BOXES */
 .confirm-box,
 .edit-box {
   background: black;
@@ -106,17 +152,6 @@ body {
   width: 100%;
 }
 
-/* EDIT INPUTS */
-.edit-box input {
-  width: 100%;
-  margin: 8px 0;
-  padding: 8px;
-  background: black;
-  border: 1px solid #00ff9c;
-  color: #00ff9c;
-}
-
-/* ACTIONS */
 .edit-actions {
   display: flex;
   justify-content: space-between;
@@ -126,47 +161,4 @@ body {
 .edit-actions .cancel {
   background: #ff2b2b;
   color: black;
-}
-
-#toggleForm {
-  padding: 8px 14px;
-  border: 2px solid #00ff9c;
-  background: black;
-  color: #00ff9c;
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0,255,156,.4);
-  cursor: pointer;
-}
-
-#linkForm {
-  max-width: 900px;
-  margin: 10px auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr 2fr auto;
-  gap: 10px;
-}
-
-@media (max-width: 700px) {
-  #linkForm {
-    grid-template-columns: 1fr;
-  }
-}
-
-#linkForm select,
-.edit-box select {
-  padding: 8px;
-  border: 2px solid #00ff9c;
-  background: black;
-  color: #00ff9c;
-  border-radius: 6px;
-  box-shadow: 0 0 10px rgba(0,255,156,.4);
-}
-
-.tag {
-  display: inline-block;
-  margin-right: 6px;
-  padding: 2px 6px;
-  border: 1px solid #00ff9c;
-  border-radius: 4px;
-  font-size: 12px;
 }
