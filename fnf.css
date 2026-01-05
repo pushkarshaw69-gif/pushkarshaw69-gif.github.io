@@ -64,14 +64,14 @@ body {
 
 /* LEFT HAND – FICTION */
 #fictionBtn {
-  left: 22%;
-  top: 54%;
+  left: 18%;
+  top: 56%;
 }
 
 /* RIGHT HAND – NON-FICTION */
 #nonFictionBtn {
   right: 18%;
-  top: 60%;
+  top: 56%;
 }
 
 /* =========================
