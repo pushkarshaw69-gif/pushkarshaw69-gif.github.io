@@ -12,43 +12,39 @@ body {
 /* =========================
    BACKGROUND IMAGE
 ========================= */
+/* BACKGROUND IMAGE – ALWAYS VISIBLE */
 #matrixBg {
   position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
-  z-index: -2;
+  z-index: 0;              /* 👈 NOT negative */
   pointer-events: none;
   filter: brightness(0.9) contrast(1.1);
 }
 
-/* =========================
-   MATRIX RAIN
-========================= */
+/* MATRIX RAIN – TRANSPARENT OVER IMAGE */
 #matrix {
   position: fixed;
   inset: 0;
-  z-index: -1;
+  z-index: 1;              /* 👈 above image */
   background: transparent;
-}
-
-/* =========================
-   RIPPLE LAYER
-========================= */
-#ripples {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
   pointer-events: none;
 }
 
-/* =========================
-   CHOOSER
-========================= */
+/* RIPPLE LAYER */
+#ripples {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* UI */
 .choice-container {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   width: 100vw;
   height: 100vh;
 }
