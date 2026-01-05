@@ -128,7 +128,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-top: clamp(60px, 12vh, 120px);
     padding-bottom: 40px;
   }
 
@@ -136,21 +137,11 @@ body {
     grid-template-columns: 1fr;
     gap: 16px;
     padding: 0 16px;
-
-    transform: scale(0.9);
-    transform-origin: center;
-
-    max-width: 420px;
-    margin-inline: auto;
   }
 
   .menu-link {
     font-size: 18px;
-    padding: 16px 28px;
-    width: 100%;
-    font-weight: 500;
-
-    box-shadow: 0 0 8px rgba(0,255,170,0.4);
+    padding: 16px 24px;
   }
 
   .menu-link.full {
@@ -161,6 +152,7 @@ body {
     margin-bottom: 30px;
   }
 }
+
 
 
 
