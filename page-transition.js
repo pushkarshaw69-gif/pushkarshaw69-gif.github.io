@@ -18,5 +18,5 @@ document.addEventListener("click", e => {
 
   setTimeout(() => {
     window.location.href = href;
-  }, 350); // MUST match CSS duration
+  }, 700); // MUST match CSS duration
 });
