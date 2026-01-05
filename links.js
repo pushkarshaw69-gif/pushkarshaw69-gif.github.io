@@ -10,6 +10,7 @@ let links = [];
 let editId = null;
 let deleteId = null;
 let user = null;
+let types = new Set();
 
 /* ELEMENTS */
 const linkForm = document.getElementById("linkForm");
@@ -31,18 +32,17 @@ const saveEditBtn = document.getElementById("saveEditBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 
 /* INPUTS */
-const typeInput = document.getElementById("type");
+const typeInput = document.getElementById("type");      // datalist input
 const nameInput = document.getElementById("name");
 const descInput = document.getElementById("desc");
 const tagsInput = document.getElementById("tags");
 
-const editType = document.getElementById("editType");
+const editType = document.getElementById("editType");   // select
 const editName = document.getElementById("editName");
 const editDesc = document.getElementById("editDesc");
 const editTags = document.getElementById("editTags");
 
-/* TYPE OPTIONS */
-const TYPE_OPTIONS = ["VIDEO", "ARTICLE", "TOOL", "CODE", "REFERENCE"];
+const typeList = document.getElementById("typeList");   // datalist
 
 /* LOCK POPUPS */
 window.addEventListener("DOMContentLoaded", () => {
@@ -63,7 +63,7 @@ toggleForm.onclick = () => linkForm.classList.toggle("hidden");
 saveLinkBtn.onclick = async () => {
   if (!user) return;
 
-  const type = typeInput.value;
+  const type = typeInput.value.trim().toUpperCase();
   const name = nameInput.value.trim();
   const desc = descInput.value.trim();
   const tags = tagsInput.value
@@ -91,12 +91,31 @@ saveLinkBtn.onclick = async () => {
   tagsInput.value = "";
 };
 
-/* LOAD */
+/* LOAD LINKS + BUILD TYPES */
 function loadLinks() {
   const q = query(collection(db, "links"), where("uid", "==", user.uid));
+
   onSnapshot(q, snap => {
     links = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    types.clear();
+    links.forEach(l => {
+      if (l.type) types.add(l.type);
+    });
+
+    updateTypeList();
     render(links);
+  });
+}
+
+/* UPDATE TYPE DATALIST */
+function updateTypeList() {
+  typeList.innerHTML = "";
+
+  [...types].sort().forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    typeList.appendChild(opt);
   });
 }
 
@@ -146,19 +165,23 @@ searchInput.oninput = () => {
 
 /* SORT */
 sortNameBtn.onclick = () =>
-  render([...links].sort((a,b)=>a.name.localeCompare(b.name)));
+  render([...links].sort((a, b) => a.name.localeCompare(b.name)));
 
 sortTypeBtn.onclick = () =>
-  render([...links].sort((a,b)=>a.type.localeCompare(b.type)));
+  render([...links].sort((a, b) => a.type.localeCompare(b.type)));
 
 /* EDIT */
 function openEdit(id) {
   const l = links.find(x => x.id === id);
   editId = id;
 
-  editType.innerHTML = TYPE_OPTIONS
-    .map(t => `<option ${t === l.type ? "selected" : ""}>${t}</option>`)
-    .join("");
+  editType.innerHTML = "";
+  [...types].sort().forEach(t => {
+    const opt = document.createElement("option");
+    opt.value = t;
+    opt.selected = t === l.type;
+    editType.appendChild(opt);
+  });
 
   editName.value = l.name;
   editDesc.value = l.desc || "";
@@ -208,4 +231,4 @@ cancelDeleteBtn.onclick = closeConfirm;
 function closeConfirm() {
   deleteId = null;
   confirmBox.classList.add("hidden");
-}
+    }
