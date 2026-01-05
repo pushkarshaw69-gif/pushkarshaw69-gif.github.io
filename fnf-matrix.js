@@ -30,7 +30,7 @@ function drawMatrix(time) {
   }
   lastTime = time;
 
-  mctx.fillStyle = "rgba(0,0,0,0.08)";
+  mctx.fillStyle = "rgba(0,0,0,0.04)";
   mctx.fillRect(0, 0, matrix.width, matrix.height);
 
   mctx.fillStyle = rainColor;
