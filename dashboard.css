@@ -102,22 +102,27 @@ body {
 /* ======================
    MOBILE FIX (FOR REAL PHONES)
 ====================== */
+/* ======================
+   MOBILE CENTERING FIX
+====================== */
 @media (max-width: 900px), (orientation: portrait) {
-  .menu {
-    grid-template-columns: 1fr;
-    gap: 14px;
-    padding: 0 14px;
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .menu-link {
-    font-size: 18px;
-    padding: 16px 0;
+  .container {
+    padding-top: 0;
+    margin-top: 0;
+    width: 100%;
   }
 
-  .menu-link.full {
-    grid-column: auto;
+  .title {
+    margin-bottom: 28px;
   }
 }
+
 
 /* ======================
    MUSIC BUTTON
@@ -138,4 +143,5 @@ body {
 .music-btn:hover {
   box-shadow: 0 0 20px rgba(0,255,156,.9);
 }
+
 
