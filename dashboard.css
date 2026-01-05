@@ -129,8 +129,6 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-
-    padding-top: 0;
     padding-bottom: 40px;
   }
 
@@ -138,11 +136,17 @@ body {
     grid-template-columns: 1fr;
     gap: 16px;
     padding: 0 16px;
+    transform: scale(0.92);
+    transform-origin: center;
+    max-width: 420px;
+    margin-inline: auto;
   }
 
   .menu-link {
     font-size: 18px;
-    padding: 16px 0;
+    padding: 16px 24px;
+    width: 100%;
+    font-weight: 500;
   }
 
   .menu-link.full {
@@ -153,5 +157,7 @@ body {
     margin-bottom: 30px;
   }
 }
+
+
 
 
