@@ -7,10 +7,10 @@ import { onAuthStateChanged }
   from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 let links = [];
+let types = new Set();
 let editId = null;
 let deleteId = null;
 let user = null;
-let types = new Set();
 
 /* ELEMENTS */
 const linkForm = document.getElementById("linkForm");
@@ -27,28 +27,20 @@ const searchInput = document.getElementById("search");
 
 const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
-
 const saveEditBtn = document.getElementById("saveEditBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 
 /* INPUTS */
-const typeInput = document.getElementById("type");      // datalist input
+const typeInput = document.getElementById("type");
 const nameInput = document.getElementById("name");
 const descInput = document.getElementById("desc");
 const tagsInput = document.getElementById("tags");
+const typeList = document.getElementById("typeList");
 
-const editType = document.getElementById("editType");   // select
+const editType = document.getElementById("editType");
 const editName = document.getElementById("editName");
 const editDesc = document.getElementById("editDesc");
 const editTags = document.getElementById("editTags");
-
-const typeList = document.getElementById("typeList");   // datalist
-
-/* LOCK POPUPS */
-window.addEventListener("DOMContentLoaded", () => {
-  editOverlay.classList.add("hidden");
-  confirmBox.classList.add("hidden");
-});
 
 /* AUTH */
 onAuthStateChanged(auth, u => {
@@ -57,65 +49,45 @@ onAuthStateChanged(auth, u => {
   loadLinks();
 });
 
-/* ADD FORM */
+/* ADD */
 toggleForm.onclick = () => linkForm.classList.toggle("hidden");
 
 saveLinkBtn.onclick = async () => {
-  if (!user) return;
-
   const type = typeInput.value.trim().toUpperCase();
   const name = nameInput.value.trim();
   const desc = descInput.value.trim();
-  const tags = tagsInput.value
-    .split(",")
-    .map(t => t.trim().toLowerCase())
-    .filter(Boolean);
+  const tags = tagsInput.value.split(",").map(t => t.trim()).filter(Boolean);
 
-  if (!type || !name) {
-    alert("Type and Name are required");
-    return;
-  }
+  if (!type || !name) return alert("Type and Link required");
 
   await addDoc(collection(db, "links"), {
     uid: user.uid,
-    type,
-    name,
-    desc,
-    tags
+    type, name, desc, tags
   });
 
   linkForm.classList.add("hidden");
-  typeInput.value = "";
-  nameInput.value = "";
-  descInput.value = "";
-  tagsInput.value = "";
+  typeInput.value = nameInput.value = descInput.value = tagsInput.value = "";
 };
 
-/* LOAD LINKS + BUILD TYPES */
+/* LOAD */
 function loadLinks() {
   const q = query(collection(db, "links"), where("uid", "==", user.uid));
-
   onSnapshot(q, snap => {
     links = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
     types.clear();
-    links.forEach(l => {
-      if (l.type) types.add(l.type);
-    });
-
+    links.forEach(l => l.type && types.add(l.type));
     updateTypeList();
     render(links);
   });
 }
 
-/* UPDATE TYPE DATALIST */
+/* TYPES */
 function updateTypeList() {
   typeList.innerHTML = "";
-
   [...types].sort().forEach(t => {
-    const opt = document.createElement("option");
-    opt.value = t;
-    typeList.appendChild(opt);
+    const o = document.createElement("option");
+    o.value = t;
+    typeList.appendChild(o);
   });
 }
 
@@ -129,18 +101,21 @@ function render(list) {
 
     row.innerHTML = `
       <div class="link-text">
-        <strong>${l.type}</strong>
-        <span>${l.name}</span>
+        <strong class="type ${l.type.toLowerCase()}">${l.type}</strong>
+        <a class="copy-link" data-url="${l.name}">${l.name}</a>
         <span>${l.desc || ""}</span>
-        <div>
-          ${(l.tags || []).map(t => `<span class="tag">#${t}</span>`).join("")}
-        </div>
+        <div>${(l.tags||[]).map(t=>`<span class="tag">#${t}</span>`).join("")}</div>
       </div>
       <div class="link-actions">
         <button class="edit-btn">✏️</button>
         <button class="del-btn">🗑️</button>
       </div>
     `;
+
+    row.querySelector(".copy-link").onclick = e => {
+      navigator.clipboard.writeText(e.target.dataset.url);
+      toast("Copied");
+    };
 
     row.querySelector(".edit-btn").onclick = () => openEdit(l.id);
     row.querySelector(".del-btn").onclick = () => askDelete(l.id);
@@ -152,83 +127,69 @@ function render(list) {
 /* SEARCH */
 searchInput.oninput = () => {
   const q = searchInput.value.toLowerCase();
-
-  const filtered = links.filter(l =>
+  render(links.filter(l =>
     l.type.toLowerCase().includes(q) ||
     l.name.toLowerCase().includes(q) ||
-    (l.desc || "").toLowerCase().includes(q) ||
-    (l.tags || []).some(t => t.includes(q))
-  );
-
-  render(filtered);
+    (l.desc||"").toLowerCase().includes(q) ||
+    (l.tags||[]).some(t=>t.toLowerCase().includes(q))
+  ));
 };
 
 /* SORT */
 sortNameBtn.onclick = () =>
-  render([...links].sort((a, b) => a.name.localeCompare(b.name)));
-
+  render([...links].sort((a,b)=>a.name.localeCompare(b.name)));
 sortTypeBtn.onclick = () =>
-  render([...links].sort((a, b) => a.type.localeCompare(b.type)));
+  render([...links].sort((a,b)=>a.type.localeCompare(b.type)));
 
 /* EDIT */
 function openEdit(id) {
-  const l = links.find(x => x.id === id);
+  const l = links.find(x=>x.id===id);
   editId = id;
 
-  editType.innerHTML = "";
-  [...types].sort().forEach(t => {
-    const opt = document.createElement("option");
-    opt.value = t;
-    opt.selected = t === l.type;
-    editType.appendChild(opt);
-  });
+  editType.innerHTML = [...types].map(t =>
+    `<option ${t===l.type?"selected":""}>${t}</option>`
+  ).join("");
 
   editName.value = l.name;
   editDesc.value = l.desc || "";
-  editTags.value = (l.tags || []).join(", ");
-
+  editTags.value = (l.tags||[]).join(", ");
   editOverlay.classList.remove("hidden");
 }
 
 saveEditBtn.onclick = async () => {
-  if (!editId) return;
-
-  const tags = editTags.value
-    .split(",")
-    .map(t => t.trim().toLowerCase())
-    .filter(Boolean);
-
-  await updateDoc(doc(db, "links", editId), {
+  await updateDoc(doc(db,"links",editId),{
     type: editType.value,
-    name: editName.value.trim(),
-    desc: editDesc.value.trim(),
-    tags
+    name: editName.value,
+    desc: editDesc.value,
+    tags: editTags.value.split(",").map(t=>t.trim()).filter(Boolean)
   });
-
-  closeEdit();
+  editOverlay.classList.add("hidden");
 };
 
-cancelEditBtn.onclick = closeEdit;
-
-function closeEdit() {
-  editId = null;
-  editOverlay.classList.add("hidden");
-}
+cancelEditBtn.onclick = () => editOverlay.classList.add("hidden");
 
 /* DELETE */
 function askDelete(id) {
   deleteId = id;
   confirmBox.classList.remove("hidden");
 }
-
 confirmDeleteBtn.onclick = async () => {
-  await deleteDoc(doc(db, "links", deleteId));
-  closeConfirm();
-};
-
-cancelDeleteBtn.onclick = closeConfirm;
-
-function closeConfirm() {
-  deleteId = null;
+  await deleteDoc(doc(db,"links",deleteId));
   confirmBox.classList.add("hidden");
-    }
+};
+cancelDeleteBtn.onclick = () => confirmBox.classList.add("hidden");
+
+/* TOAST */
+function toast(msg){
+  const t=document.createElement("div");
+  t.textContent=msg;
+  t.style.position="fixed";
+  t.style.bottom="30px";
+  t.style.left="50%";
+  t.style.transform="translateX(-50%)";
+  t.style.border="1px solid #00ff9c";
+  t.style.background="black";
+  t.style.padding="6px 12px";
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),1000);
+}
