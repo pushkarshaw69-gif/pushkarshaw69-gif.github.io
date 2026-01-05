@@ -107,21 +107,44 @@ canvas {
   justify-content: center;
 }
 
-.menu button {
-  background: transparent;
-  border: 2px solid #00ff9c;
+
+/* ======================
+   MENU LINKS (BUTTON LOOK)
+====================== */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 30px;
+}
+
+.menu-link {
+  display: block;
+  text-align: center;
+  padding: 14px 22px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 18px;
   color: #00ff9c;
-  padding: 12px 26px;
-  font-size: 16px;
-  cursor: pointer;
-  box-shadow: 0 0 12px #00ff9c;
+  border: 2px solid #00ff9c;
+  text-decoration: none;
+  background: transparent;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
 }
 
-.menu button:hover {
-  background: #00ff9c;
-  color: black;
+.menu-link:hover {
+  box-shadow: 0 0 25px rgba(0,255,156,.9);
+  transform: translateY(-2px);
 }
 
+.menu-link.disconnect {
+  border-color: #ff4d4d;
+  color: #ff4d4d;
+}
+
+.menu-link.disconnect:hover {
+  box-shadow: 0 0 25px rgba(255,77,77,.9);
+}
+
 /* Logout */
 .logout {
   border-color: #ff2b2b;
