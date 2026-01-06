@@ -84,18 +84,24 @@ body {
 /* =========================
    COLOR-CODED HOVERS
 ========================= */
+/* SERIES – BLUE */
 #seriesBtn:hover {
-  box-shadow: 0 0 18px rgba(0,255,156,.8);
-}
-
-#moviesBtn:hover {
   border-color: #00aaff;
   color: #00aaff;
-  box-shadow: 0 0 18px rgba(0,170,255,.8);
+  box-shadow: 0 0 18px rgba(0,170,255,.9);
 }
 
-#docBtn:hover {
-  border-color: #ffaa00;
-  color: #ffaa00;
-  box-shadow: 0 0 18px rgba(255,170,0,.8);
+/* MOVIES – WHITE */
+#moviesBtn:hover {
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0 0 18px rgba(255,255,255,.9);
 }
+
+/* DOCUMENTARY – RED */
+#docBtn:hover {
+  border-color: #ff2b2b;
+  color: #ff2b2b;
+  box-shadow: 0 0 18px rgba(255,43,43,.9);
+}
+
