@@ -1,4 +1,4 @@
-import { startStuffMatrix } from "./stuffs-matrix.js";
+import { startStuffMatrix } from "./stuff-matrix.js";
 
 /* =========================
    START MATRIX
