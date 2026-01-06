@@ -37,17 +37,17 @@ const moviesBtn = document.getElementById("moviesBtn");
 const docBtn = document.getElementById("docBtn");
 
 seriesBtn.addEventListener("mouseenter", () => {
-  matrix.setColor("#00ff9c");
+  matrix.setColor("#00aaff"); // BLUE
   showBg("series");
 });
 
 moviesBtn.addEventListener("mouseenter", () => {
-  matrix.setColor("#00aaff");
+  matrix.setColor("#ffffff"); // WHITE
   showBg("movies");
 });
 
 docBtn.addEventListener("mouseenter", () => {
-  matrix.setColor("#ffaa00");
+  matrix.setColor("#ff2b2b"); // RED
   showBg("documentary");
 });
 
