@@ -1,14 +1,15 @@
 /* =========================
    STUFF MATRIX ENGINE
+   (Balanced & Non-Overlapping)
 ========================= */
 
 export function startStuffMatrix({
   canvasId = "matrix",
   color = "#00ff9c",
-  density = 1.4,
+  density = 1.2,     // calmer horizontal density
   fontSize = 14,
-  speed = 0.9,
-  trail = 0.25
+  speed = 0.6,       // normal Matrix pace
+  trail = 0.06       // clean long trails (NOT aggressive)
 } = {}) {
 
   const canvas = document.getElementById(canvasId);
@@ -22,6 +23,8 @@ export function startStuffMatrix({
   function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    // Each column tracks row index (integer only)
     columns = Array(
       Math.floor((window.innerWidth / fontSize) * density)
     ).fill(0);
@@ -31,6 +34,7 @@ export function startStuffMatrix({
   resize();
 
   function draw() {
+    /* Fade previous frame WITHOUT darkening background */
     ctx.globalCompositeOperation = "destination-out";
     ctx.fillStyle = `rgba(0,0,0,${trail})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -39,16 +43,20 @@ export function startStuffMatrix({
     ctx.fillStyle = rainColor;
     ctx.font = `${fontSize}px monospace`;
 
-    columns.forEach((y, i) => {
-      for (let k = 0; k < 2; k++) {
-        const t = chars[Math.floor(Math.random() * chars.length)];
-        ctx.fillText(t, i * fontSize, (y - k) * fontSize);
-      }
+    columns.forEach((row, i) => {
+      // Draw ONE digit per row (no overlap)
+      const char = chars[Math.floor(Math.random() * chars.length)];
+      const x = i * fontSize;
+      const y = row * fontSize * 1.1; // extra vertical spacing
 
-      if (y * fontSize > canvas.height && Math.random() > 0.92) {
+      ctx.fillText(char, x, y);
+
+      // Reset column naturally
+      if (y > canvas.height && Math.random() > 0.97) {
         columns[i] = 0;
+      } else {
+        columns[i] += speed;
       }
-      columns[i] += speed;
     });
 
     requestAnimationFrame(draw);
