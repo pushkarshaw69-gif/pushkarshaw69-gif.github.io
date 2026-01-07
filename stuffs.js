@@ -1,7 +1,7 @@
 import { startStuffMatrix } from "./stuff-matrix.js";
 
 /* =========================
-   START MATRIX (ENGINE OWNED)
+   START MATRIX
 ========================= */
 const matrix = startStuffMatrix("matrix");
 
@@ -16,56 +16,84 @@ const bgs = {
 };
 
 function showBg(key) {
-  Object.values(bgs).forEach(img => {
-    if (img) img.classList.remove("active");
-  });
+  Object.values(bgs).forEach(img => img.classList.remove("active"));
   bgs[key]?.classList.add("active");
 }
 
 /* =========================
-   UI ELEMENTS
+   BUTTONS
 ========================= */
 const seriesBtn = document.getElementById("seriesBtn");
 const moviesBtn = document.getElementById("moviesBtn");
 const docBtn = document.getElementById("docBtn");
 
-/* =========================
-   HOVER BEHAVIOR (UI ONLY)
-========================= */
-seriesBtn.addEventListener("mouseenter", () => {
-  matrix.setColor("#cfff04"); // YELLOW
+/* Hover color + background (NO LOCK) */
+seriesBtn.onmouseenter = () => {
+  matrix.setColor("#ffd400");
   showBg("series");
-});
+};
 
-moviesBtn.addEventListener("mouseenter", () => {
-  matrix.setColor("#ffffff"); // WHITE
+moviesBtn.onmouseenter = () => {
+  matrix.setColor("#ffffff");
   showBg("movies");
-});
+};
 
-docBtn.addEventListener("mouseenter", () => {
-  matrix.setColor("#ff2b2b"); // RED
+docBtn.onmouseenter = () => {
+  matrix.setColor("#ff2b2b");
   showBg("documentary");
-});
+};
 
-/* Reset to default */
 [seriesBtn, moviesBtn, docBtn].forEach(btn => {
-  btn.addEventListener("mouseleave", () => {
-    matrix.setColor("#00ff9c"); // MATRIX GREEN
+  btn.onmouseleave = () => {
+    matrix.setColor("#00ff9c");
     showBg("default");
-  });
+  };
 });
 
 /* =========================
-   CLICK ROUTING
+   MUSIC + MATRIX SYNC
 ========================= */
-seriesBtn.addEventListener("click", () => {
-  location.href = "series.html";
-});
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
 
-moviesBtn.addEventListener("click", () => {
-  location.href = "movies.html";
-});
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+const analyser = audioCtx.createAnalyser();
 
-docBtn.addEventListener("click", () => {
-  location.href = "documentary.html";
-});
+const source = audioCtx.createMediaElementSource(music);
+source.connect(analyser);
+analyser.connect(audioCtx.destination);
+
+analyser.fftSize = 256;
+const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+let playing = false;
+
+function syncMatrix() {
+  analyser.getByteFrequencyData(dataArray);
+
+  let sum = 0;
+  for (let i = 0; i < dataArray.length; i++) {
+    sum += dataArray[i];
+  }
+
+  const energy = sum / dataArray.length / 255;
+  matrix.setEnergy(energy);
+
+  if (playing) requestAnimationFrame(syncMatrix);
+}
+
+musicBtn.onclick = async () => {
+  if (!playing) {
+    await audioCtx.resume();
+    music.play();
+    playing = true;
+    syncMatrix();
+    musicBtn.textContent = "⏸";
+  } else {
+    music.pause();
+    playing = false;
+    matrix.setEnergy(0);
+    musicBtn.textContent = "▶";
+  }
+};
