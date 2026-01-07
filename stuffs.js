@@ -49,6 +49,20 @@ docBtn.onmouseenter = () => {
     showBg("default");
   };
 });
+/* =========================
+   ROUTING (MISSING PART)
+========================= */
+seriesBtn.onclick = () => {
+  window.location.href = "series.html";
+};
+
+moviesBtn.onclick = () => {
+  window.location.href = "movies.html";
+};
+
+docBtn.onclick = () => {
+  window.location.href = "documentary.html";
+};
 
 /* =========================
    MUSIC + MATRIX SYNC
