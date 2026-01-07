@@ -96,6 +96,22 @@ body {
   box-shadow: 0 0 20px rgba(255,43,43,1);
 }
 /* =========================
+   MATRIX BUTTON FLICKER
+========================= */
+@keyframes matrix-flicker {
+  0%   { opacity: 1; }
+  5%   { opacity: 0.85; }
+  10%  { opacity: 1; }
+  15%  { opacity: 0.9; }
+  20%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+
+/* Apply flicker ONLY on hover */
+.stuffs-btn:hover {
+  animation: matrix-flicker 0.18s infinite;
+}
+/* =========================
    MUSIC BUTTON
 ========================= */
 .music-btn {
