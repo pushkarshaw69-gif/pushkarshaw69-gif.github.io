@@ -34,7 +34,7 @@ seriesBtn.onmouseenter = () => {
 };
 
 moviesBtn.onmouseenter = () => {
-  matrix.setColor("#ffffff");
+  matrix.setColor("#1FB6FF"); // BLUE
   showBg("movies");
 };
 
