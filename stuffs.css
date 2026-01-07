@@ -51,7 +51,7 @@ body {
   align-items: flex-start;
   gap: 60px;
 
-  transform: translateY(300px);
+  padding-top: 300px; /* replaces translateY */
 }
 
 .stuffs-btn {
