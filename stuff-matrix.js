@@ -15,7 +15,7 @@ export function startStuffMatrix(canvasId = "matrix") {
   const fontSize = 14;
   const density = 1.0;   // slightly calmer
   const speed = 0.35;    // ⬅️ MAIN SLOWDOWN
-  const trail = 0.08;    // clean long trails
+  const trail = 0.04;    // clean long trails
 
   let rainColor = "#00ff9c";
   let columns = [];
