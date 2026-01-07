@@ -1,6 +1,9 @@
 /* ===============================
    ROUTE GUARD + LIBRARY TYPE
 ================================ */
+import { requireAuth } from "./auth-guard.js";
+
+requireAuth();
 const params = new URLSearchParams(window.location.search);
 const libraryType = params.get("type"); // fiction | nonfiction
 
@@ -227,3 +230,4 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
+
