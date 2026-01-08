@@ -2,180 +2,182 @@ import { db } from "./firebase.js";
 import {
   collection,
   addDoc,
-  getDocs,
-  updateDoc,
   deleteDoc,
+  updateDoc,
   doc,
   query,
+  onSnapshot,
   orderBy
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 
-/* =======================
-   DOM REFERENCES
-======================= */
+/* =====================
+   STATE
+===================== */
+let series = [];
+let editingId = null;
+let deleteId = null;
 
-const addBtn = document.getElementById("addBtn");
-const formWrapper = document.getElementById("formWrapper");
+/* =====================
+   ELEMENTS
+===================== */
 const seriesForm = document.getElementById("seriesForm");
+const toggleFormBtn = document.getElementById("addBtn");
 const seriesList = document.getElementById("seriesList");
 
 const nameInput = document.getElementById("name");
 const seasonsInput = document.getElementById("seasons");
-const docIdInput = document.getElementById("docId");
-
 const genreSelect = document.getElementById("genre");
-const addGenreBtn = document.getElementById("addGenreBtn");
+
 const newGenreInput = document.getElementById("newGenre");
-const cancelBtn = document.getElementById("cancelBtn");
+const addGenreBtn = document.getElementById("addGenreBtn");
 
-/* =======================
-   FIRESTORE COLLECTIONS
-======================= */
+/* EDIT OVERLAY */
+const editOverlay = document.getElementById("editOverlay");
+const editName = document.getElementById("editName");
+const editSeasons = document.getElementById("editSeasons");
+const editGenre = document.getElementById("editGenre");
 
-const seriesCol = collection(db, "series");
-const genresCol = collection(db, "genres");
-
-/* =======================
-   UI CONTROLS
-======================= */
-
-addBtn.onclick = () => formWrapper.classList.toggle("hidden");
-
-cancelBtn.onclick = () => {
-  seriesForm.reset();
-  docIdInput.value = "";
-  newGenreInput.classList.add("hidden");
-  formWrapper.classList.add("hidden");
-};
+/* =====================
+   UI
+===================== */
+toggleFormBtn.onclick =
+  () => seriesForm.classList.toggle("hidden");
 
 addGenreBtn.onclick = () => {
   newGenreInput.classList.toggle("hidden");
   newGenreInput.focus();
 };
 
-/* =======================
+/* =====================
    GENRES (GLOBAL)
-======================= */
+===================== */
+const genresCol = collection(db, "genres");
 
-async function loadGenres(selected = null) {
-  genreSelect.innerHTML = "";
+function loadGenres(select = null) {
+  onSnapshot(
+    query(genresCol, orderBy("name")),
+    snap => {
+      genreSelect.innerHTML = "";
+      editGenre.innerHTML = "";
 
-  const q = query(genresCol, orderBy("name"));
-  const snap = await getDocs(q);
+      snap.forEach(d => {
+        const g = d.data().name;
 
-  snap.forEach(d => {
-    const opt = document.createElement("option");
-    opt.value = d.data().name;
-    opt.textContent = d.data().name;
-    genreSelect.appendChild(opt);
-  });
+        genreSelect.innerHTML += `<option>${g}</option>`;
+        editGenre.innerHTML += `<option>${g}</option>`;
+      });
 
-  if (selected) genreSelect.value = selected;
+      if (select) editGenre.value = select;
+    }
+  );
 }
 
 newGenreInput.onchange = async () => {
-  const genreName = newGenreInput.value.trim();
-  if (!genreName) return;
+  const g = newGenreInput.value.trim();
+  if (!g) return;
 
-  const snap = await getDocs(genresCol);
-  for (const d of snap.docs) {
-    if (d.data().name.toLowerCase() === genreName.toLowerCase()) {
-      newGenreInput.value = "";
-      newGenreInput.classList.add("hidden");
-      loadGenres(genreName);
-      return;
-    }
-  }
-
-  await addDoc(genresCol, {
-    name: genreName,
-    createdAt: Date.now()
-  });
-
+  await addDoc(genresCol, { name: g });
   newGenreInput.value = "";
   newGenreInput.classList.add("hidden");
-  loadGenres(genreName);
 };
 
-/* =======================
-   SERIES CRUD
-======================= */
+/* =====================
+   ADD SERIES
+===================== */
+window.addSeries = async () => {
+  if (!nameInput.value.trim()) return;
 
-seriesForm.onsubmit = async (e) => {
-  e.preventDefault();
-
-  const data = {
+  await addDoc(collection(db, "series"), {
     name: nameInput.value.trim(),
     seasons: Number(seasonsInput.value),
     genre: genreSelect.value
-  };
+  });
 
-  if (!data.name || !data.seasons || !data.genre) return;
-
-  if (docIdInput.value) {
-    await updateDoc(doc(db, "series", docIdInput.value), data);
-  } else {
-    await addDoc(seriesCol, data);
-  }
-
-  seriesForm.reset();
-  docIdInput.value = "";
-  formWrapper.classList.add("hidden");
-  loadSeries();
+  seriesForm.classList.add("hidden");
+  nameInput.value = "";
+  seasonsInput.value = "";
 };
 
-async function loadSeries() {
-  seriesList.innerHTML = "";
+/* =====================
+   LOAD SERIES
+===================== */
+function loadSeries() {
+  const q = query(collection(db, "series"), orderBy("name"));
 
-  const snap = await getDocs(seriesCol);
-  snap.forEach(d => {
-    const s = d.data();
-
-    const card = document.createElement("div");
-    card.className = "series-card";
-
-    card.innerHTML = `
-      <strong>${s.name}</strong><br>
-      Seasons: ${s.seasons}<br>
-      Genre: ${s.genre}
-
-      <div class="card-actions">
-        <span title="Edit" onclick="editSeries(
-          '${d.id}',
-          '${s.name.replace(/'/g, "\\'")}',
-          '${s.seasons}',
-          '${s.genre.replace(/'/g, "\\'")}'
-        )">✏️</span>
-
-        <span title="Delete" onclick="deleteSeries('${d.id}')">🗑️</span>
-      </div>
-    `;
-
-    seriesList.appendChild(card);
+  onSnapshot(q, snap => {
+    series = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderSeries(series);
   });
 }
 
-/* =======================
-   GLOBAL FUNCTIONS
-======================= */
+/* =====================
+   RENDER
+===================== */
+function renderSeries(list) {
+  seriesList.innerHTML = "";
 
-window.editSeries = (id, n, s, g) => {
-  formWrapper.classList.remove("hidden");
-  docIdInput.value = id;
-  nameInput.value = n;
-  seasonsInput.value = s;
-  loadGenres(g);
+  list.forEach(s => {
+    seriesList.innerHTML += `
+      <div class="series-row">
+        <div class="series-actions">
+          <button onclick="editSeries('${s.id}')">✏️</button>
+          <button onclick="askDelete('${s.id}')">🗑️</button>
+        </div>
+
+        <p class="series-name">${s.name}</p>
+        <p class="series-meta">
+          ${s.seasons} season${s.seasons > 1 ? "s" : ""} · ${s.genre}
+        </p>
+      </div>
+    `;
+  });
+}
+
+/* =====================
+   EDIT
+===================== */
+window.editSeries = id => {
+  const s = series.find(x => x.id === id);
+  editingId = id;
+
+  editName.value = s.name;
+  editSeasons.value = s.seasons;
+  editGenre.value = s.genre;
+
+  editOverlay.classList.remove("hidden");
 };
 
-window.deleteSeries = async (id) => {
-  if (!confirm("Delete this series?")) return;
-  await deleteDoc(doc(db, "series", id));
-  loadSeries();
+window.saveEdit = async () => {
+  await updateDoc(doc(db, "series", editingId), {
+    name: editName.value.trim(),
+    seasons: Number(editSeasons.value),
+    genre: editGenre.value
+  });
+
+  editOverlay.classList.add("hidden");
 };
 
-/* =======================
+window.closeEdit = () =>
+  editOverlay.classList.add("hidden");
+
+/* =====================
+   DELETE
+===================== */
+window.askDelete = id => {
+  deleteId = id;
+  document.getElementById("confirmBox").classList.remove("hidden");
+};
+
+window.confirmDelete = async () => {
+  await deleteDoc(doc(db, "series", deleteId));
+  closeConfirm();
+};
+
+window.closeConfirm = () =>
+  document.getElementById("confirmBox").classList.add("hidden");
+
+/* =====================
    INIT
-======================= */
-
+===================== */
 loadGenres();
 loadSeries();
