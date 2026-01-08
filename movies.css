@@ -1,144 +1,150 @@
+/* =========================
+   BASE
+========================= */
 body {
-  margin: 0;
   background: black;
-  color: #1FB6FF;
   font-family: 'Share Tech Mono', monospace;
+  color: #1FB6FF;
+  padding: 20px;
 }
 
-.header {
-  padding: 20px 40px;
-  border-bottom: 2px solid #1FB6FF;
+/* =========================
+   TITLE
+========================= */
+.title {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* =========================
+   CONTROLS (same as links)
+========================= */
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.controls input,
+.controls button,
+.controls select {
+  padding: 8px;
+  border: 2px solid #1FB6FF;
+  background: black;
+  color: #1FB6FF;
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgba(31,182,255,.35);
+}
+
+/* ADD BUTTON */
+#toggleForm {
+  display: block;
+  margin: 10px auto;
+}
+
+/* =========================
+   MOVIE ROW (IDENTICAL TO LINKS)
+========================= */
+.movie-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
 
-button {
-  background: black;
   border: 2px solid #1FB6FF;
-  color: #1FB6FF;
-  padding: 8px 14px;
-  cursor: pointer;
-  font-family: inherit;
+  padding: 10px 14px;
+  margin: 8px auto;
+  max-width: 900px;
+
+  box-shadow: 0 0 14px rgba(31,182,255,.45);
 }
 
-.stats {
-  padding: 10px 40px;
+/* TEXT BLOCK */
+.movie-text {
   display: flex;
-  gap: 30px;
-  border-bottom: 2px solid rgba(31,182,255,.3);
+  flex-direction: column;
+  gap: 4px;
   font-size: 14px;
 }
 
-.controls,
-.add-movie {
-  padding: 20px 40px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-input, select {
-  background: black;
-  border: 2px solid #1FB6FF;
+/* GENRE TAGS */
+.movie-tags span {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 6px;
+  border: 1px solid #1FB6FF;
+  font-size: 12px;
   color: #1FB6FF;
-  padding: 8px;
-  font-family: inherit;
 }
 
-#movieList {
-  padding: 20px 40px;
-}
-
-.movie-card {
-  border: 2px solid #1FB6FF;
-  padding: 14px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.movie-info {
-  max-width: 80%;
-}
-
-.tags {
-  font-size: 12px;
-  opacity: 0.85;
-}
-
+/* =========================
+   SEEN / UNSEEN BADGE
+========================= */
 .badge {
-  padding: 2px 8px;
-  border: 1px solid;
-  font-size: 12px;
-  margin-left: 8px;
+  font-weight: bold;
   cursor: pointer;
 }
 
 .badge.seen {
-  color: #00ff9c;
-  border-color: #00ff9c;
+  color: #1FB6FF;
+  text-shadow: 0 0 10px rgba(31,182,255,.9);
 }
 
 .badge.unseen {
   color: #ff2b2b;
-  border-color: #ff2b2b;
+  text-shadow: 0 0 10px rgba(255,43,43,.8);
 }
 
-.actions button {
-  border: none;
-  background: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.genre-tags {
+/* =========================
+   ACTION ICONS
+========================= */
+.movie-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  width: 100%;
+  gap: 12px;
 }
 
-.genre-tag {
-  border: 1px solid #1FB6FF;
-  padding: 2px 8px;
-  font-size: 12px;
+.movie-actions button {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #1FB6FF;
   cursor: pointer;
 }
 
-.genre-tag:hover {
-  background: rgba(31,182,255,.15);
+.movie-actions button:hover {
+  text-shadow: 0 0 12px rgba(31,182,255,.9);
 }
 
-.overlay {
+/* =========================
+   FORMS / POPUPS
+========================= */
+.hidden { display: none; }
+
+.confirm,
+.edit-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,.8);
+  background: rgba(0,0,0,.75);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
-.hidden {
-  display: none;
-}
-
-.popup {
-  border: 2px solid #1FB6FF;
+.confirm-box,
+.edit-box {
   background: black;
+  border: 2px solid #1FB6FF;
   padding: 20px;
-  width: 320px;
+  box-shadow: 0 0 18px rgba(31,182,255,.6);
 }
 
-.popup input,
-.popup select {
+.confirm-box input,
+.edit-box input,
+.confirm-box select {
   width: 100%;
-  margin: 6px 0;
-}
-
-.actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
+  margin: 8px 0;
+  padding: 8px;
+  background: black;
+  border: 1px solid #1FB6FF;
+  color: #1FB6FF;
 }
