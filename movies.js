@@ -71,7 +71,7 @@ document.getElementById("saveMovie").onclick = async () => {
   const data = {
     title,
     director: movieDirector.value.trim(),
-    genres: [...document.querySelectorAll(".tags span")].map(t=>t.textContent),
+    genres: [...document.querySelectorAll("#genreTags span")].map(t => t.textContent),
     seen: movieSeen.value
   };
 
@@ -100,5 +100,12 @@ document.getElementById("cancelDelete").onclick = () => {
 
 document.getElementById("addMovieBtn").onclick = () => {
   editingId = null;
+
+  movieTitle.value = "";
+  movieDirector.value = "";
+  movieSeen.value = "unseen";
+  document.getElementById("genreTags").innerHTML = "";
+
   overlay.classList.remove("hidden");
 };
+
