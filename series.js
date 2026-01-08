@@ -19,6 +19,10 @@ const formWrapper = document.getElementById("formWrapper");
 const seriesForm = document.getElementById("seriesForm");
 const seriesList = document.getElementById("seriesList");
 
+const nameInput = document.getElementById("name");
+const seasonsInput = document.getElementById("seasons");
+const docIdInput = document.getElementById("docId");
+
 const genreSelect = document.getElementById("genre");
 const addGenreBtn = document.getElementById("addGenreBtn");
 const newGenreInput = document.getElementById("newGenre");
@@ -39,7 +43,7 @@ addBtn.onclick = () => formWrapper.classList.toggle("hidden");
 
 cancelBtn.onclick = () => {
   seriesForm.reset();
-  docId.value = "";
+  docIdInput.value = "";
   newGenreInput.classList.add("hidden");
   formWrapper.classList.add("hidden");
 };
@@ -70,28 +74,27 @@ async function loadGenres(selected = null) {
 }
 
 newGenreInput.onchange = async () => {
-  const name = newGenreInput.value.trim();
-  if (!name) return;
+  const genreName = newGenreInput.value.trim();
+  if (!genreName) return;
 
-  // prevent duplicates
   const snap = await getDocs(genresCol);
   for (const d of snap.docs) {
-    if (d.data().name.toLowerCase() === name.toLowerCase()) {
+    if (d.data().name.toLowerCase() === genreName.toLowerCase()) {
       newGenreInput.value = "";
       newGenreInput.classList.add("hidden");
-      loadGenres(name);
+      loadGenres(genreName);
       return;
     }
   }
 
   await addDoc(genresCol, {
-    name,
+    name: genreName,
     createdAt: Date.now()
   });
 
   newGenreInput.value = "";
   newGenreInput.classList.add("hidden");
-  loadGenres(name);
+  loadGenres(genreName);
 };
 
 /* =======================
@@ -102,21 +105,21 @@ seriesForm.onsubmit = async (e) => {
   e.preventDefault();
 
   const data = {
-    name: name.value.trim(),
-    seasons: Number(seasons.value),
-    genre: genre.value
+    name: nameInput.value.trim(),
+    seasons: Number(seasonsInput.value),
+    genre: genreSelect.value
   };
 
   if (!data.name || !data.seasons || !data.genre) return;
 
-  if (docId.value) {
-    await updateDoc(doc(db, "series", docId.value), data);
+  if (docIdInput.value) {
+    await updateDoc(doc(db, "series", docIdInput.value), data);
   } else {
     await addDoc(seriesCol, data);
   }
 
   seriesForm.reset();
-  docId.value = "";
+  docIdInput.value = "";
   formWrapper.classList.add("hidden");
   loadSeries();
 };
@@ -139,9 +142,9 @@ async function loadSeries() {
       <div class="card-actions">
         <span title="Edit" onclick="editSeries(
           '${d.id}',
-          '${s.name.replace(/'/g,"\\'")}',
+          '${s.name.replace(/'/g, "\\'")}',
           '${s.seasons}',
-          '${s.genre.replace(/'/g,"\\'")}'
+          '${s.genre.replace(/'/g, "\\'")}'
         )">✏️</span>
 
         <span title="Delete" onclick="deleteSeries('${d.id}')">🗑️</span>
@@ -158,9 +161,9 @@ async function loadSeries() {
 
 window.editSeries = (id, n, s, g) => {
   formWrapper.classList.remove("hidden");
-  docId.value = id;
-  name.value = n;
-  seasons.value = s;
+  docIdInput.value = id;
+  nameInput.value = n;
+  seasonsInput.value = s;
   loadGenres(g);
 };
 
