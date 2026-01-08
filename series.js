@@ -5,8 +5,14 @@ import {
   getDocs,
   updateDoc,
   deleteDoc,
-  doc
+  doc,
+  query,
+  orderBy
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+
+/* =======================
+   DOM REFERENCES
+======================= */
 
 const addBtn = document.getElementById("addBtn");
 const formWrapper = document.getElementById("formWrapper");
@@ -18,56 +24,95 @@ const addGenreBtn = document.getElementById("addGenreBtn");
 const newGenreInput = document.getElementById("newGenre");
 const cancelBtn = document.getElementById("cancelBtn");
 
-let genres = ["Drama", "Sci-Fi", "Thriller"];
+/* =======================
+   FIRESTORE COLLECTIONS
+======================= */
 
-function loadGenres() {
-  genreSelect.innerHTML = "";
-  genres.forEach(g => {
-    const option = document.createElement("option");
-    option.value = g;
-    option.textContent = g;
-    genreSelect.appendChild(option);
-  });
-}
+const seriesCol = collection(db, "series");
+const genresCol = collection(db, "genres");
 
-loadGenres();
+/* =======================
+   UI CONTROLS
+======================= */
 
 addBtn.onclick = () => formWrapper.classList.toggle("hidden");
 
 cancelBtn.onclick = () => {
   seriesForm.reset();
+  docId.value = "";
+  newGenreInput.classList.add("hidden");
   formWrapper.classList.add("hidden");
 };
 
 addGenreBtn.onclick = () => {
   newGenreInput.classList.toggle("hidden");
+  newGenreInput.focus();
 };
 
-newGenreInput.onchange = () => {
-  const g = newGenreInput.value.trim();
-  if (g && !genres.includes(g)) {
-    genres.push(g);
-    loadGenres();
-    genreSelect.value = g;
+/* =======================
+   GENRES (GLOBAL)
+======================= */
+
+async function loadGenres(selected = null) {
+  genreSelect.innerHTML = "";
+
+  const q = query(genresCol, orderBy("name"));
+  const snap = await getDocs(q);
+
+  snap.forEach(d => {
+    const opt = document.createElement("option");
+    opt.value = d.data().name;
+    opt.textContent = d.data().name;
+    genreSelect.appendChild(opt);
+  });
+
+  if (selected) genreSelect.value = selected;
+}
+
+newGenreInput.onchange = async () => {
+  const name = newGenreInput.value.trim();
+  if (!name) return;
+
+  // prevent duplicates
+  const snap = await getDocs(genresCol);
+  for (const d of snap.docs) {
+    if (d.data().name.toLowerCase() === name.toLowerCase()) {
+      newGenreInput.value = "";
+      newGenreInput.classList.add("hidden");
+      loadGenres(name);
+      return;
+    }
   }
+
+  await addDoc(genresCol, {
+    name,
+    createdAt: Date.now()
+  });
+
   newGenreInput.value = "";
   newGenreInput.classList.add("hidden");
+  loadGenres(name);
 };
+
+/* =======================
+   SERIES CRUD
+======================= */
 
 seriesForm.onsubmit = async (e) => {
   e.preventDefault();
 
-  const id = docId.value;
   const data = {
-    name: name.value,
-    seasons: seasons.value,
+    name: name.value.trim(),
+    seasons: Number(seasons.value),
     genre: genre.value
   };
 
-  if (id) {
-    await updateDoc(doc(db, "series", id), data);
+  if (!data.name || !data.seasons || !data.genre) return;
+
+  if (docId.value) {
+    await updateDoc(doc(db, "series", docId.value), data);
   } else {
-    await addDoc(collection(db, "series"), data);
+    await addDoc(seriesCol, data);
   }
 
   seriesForm.reset();
@@ -78,8 +123,8 @@ seriesForm.onsubmit = async (e) => {
 
 async function loadSeries() {
   seriesList.innerHTML = "";
-  const snap = await getDocs(collection(db, "series"));
 
+  const snap = await getDocs(seriesCol);
   snap.forEach(d => {
     const s = d.data();
 
@@ -90,9 +135,16 @@ async function loadSeries() {
       <strong>${s.name}</strong><br>
       Seasons: ${s.seasons}<br>
       Genre: ${s.genre}
+
       <div class="card-actions">
-        <span onclick="editSeries('${d.id}','${s.name}','${s.seasons}','${s.genre}')">✏️</span>
-        <span onclick="deleteSeries('${d.id}')">🗑️</span>
+        <span title="Edit" onclick="editSeries(
+          '${d.id}',
+          '${s.name.replace(/'/g,"\\'")}',
+          '${s.seasons}',
+          '${s.genre.replace(/'/g,"\\'")}'
+        )">✏️</span>
+
+        <span title="Delete" onclick="deleteSeries('${d.id}')">🗑️</span>
       </div>
     `;
 
@@ -100,19 +152,27 @@ async function loadSeries() {
   });
 }
 
+/* =======================
+   GLOBAL FUNCTIONS
+======================= */
+
 window.editSeries = (id, n, s, g) => {
   formWrapper.classList.remove("hidden");
   docId.value = id;
   name.value = n;
   seasons.value = s;
-  genre.value = g;
+  loadGenres(g);
 };
 
 window.deleteSeries = async (id) => {
-  if (confirm("Delete this series?")) {
-    await deleteDoc(doc(db, "series", id));
-    loadSeries();
-  }
+  if (!confirm("Delete this series?")) return;
+  await deleteDoc(doc(db, "series", id));
+  loadSeries();
 };
 
+/* =======================
+   INIT
+======================= */
+
+loadGenres();
 loadSeries();
