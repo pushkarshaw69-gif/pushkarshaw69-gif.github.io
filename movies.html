@@ -2,82 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Movies</title>
+  <title>MOVIES</title>
   <link rel="stylesheet" href="movies.css">
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header">
-  <h1>MOVIES</h1>
-  <button id="backBtn">← Back</button>
+<header class="top">
+  <h1>🎬 MOVIES</h1>
+
+  <div class="controls">
+    <input id="search" placeholder="Search title, director, genre…">
+    <select id="filterSeen">
+      <option value="all">All</option>
+      <option value="seen">Seen</option>
+      <option value="unseen">Not Seen</option>
+    </select>
+  </div>
+
+  <button id="addMovieBtn" class="add-btn">＋ Add Movie</button>
 </header>
 
-<!-- STATS -->
 <section class="stats">
   <span id="totalCount">Total: 0</span>
   <span id="seenCount">Seen: 0</span>
   <span id="unseenCount">Not Seen: 0</span>
 </section>
 
-<!-- CONTROLS -->
-<section class="controls">
-  <input id="search" placeholder="Search title, director, genre...">
-  <select id="filterSeen">
-    <option value="all">All</option>
-    <option value="seen">Seen</option>
-    <option value="unseen">Not Seen</option>
-  </select>
-</section>
+<section id="movieList" class="list"></section>
 
-<!-- ADD MOVIE -->
-<section class="add-movie">
-  <!-- ⚠️ ID FIX -->
-  <input id="movieTitle" placeholder="Movie Title *">
-  <input id="movieDirector" placeholder="Director">
-
-  <input id="genreInput" placeholder="Add genre and press Enter">
-  <select id="genreSelect">
-    <option value="">Select genre</option>
-  </select>
-
-  <div id="genreTags" class="genre-tags"></div>
-
-  <select id="movieSeen">
-    <option value="unseen">Not Seen</option>
-    <option value="seen">Seen</option>
-  </select>
-
-  <!-- ⚠️ ID FIX -->
-  <button id="addMovieBtn">Add Movie</button>
-</section>
-
-<!-- MOVIE LIST -->
-<section id="movieList"></section>
-
-<!-- EDIT POPUP -->
+<!-- ADD / EDIT POPUP -->
 <div id="editOverlay" class="overlay hidden">
   <div class="popup">
-    <h3>Edit Movie</h3>
+    <h3 id="popupTitle">Add Movie</h3>
 
-    <input id="editMovieTitle">
-    <input id="editMovieDirector">
+    <input id="movieTitle" placeholder="Movie Title *">
+    <input id="movieDirector" placeholder="Director">
 
-    <input id="editGenreInput" placeholder="Add genre and press Enter">
-    <select id="editGenreSelect">
+    <input id="genreInput" placeholder="Add genre and press Enter">
+    <select id="genreSelect">
       <option value="">Select genre</option>
     </select>
 
-    <div id="editGenreTags" class="genre-tags"></div>
+    <div id="genreTags" class="tags"></div>
 
-    <select id="editMovieSeen">
-      <option value="seen">Seen</option>
+    <select id="movieSeen">
       <option value="unseen">Not Seen</option>
+      <option value="seen">Seen</option>
     </select>
 
     <div class="actions">
-      <button id="saveEdit">Save</button>
-      <button id="cancelEdit">Cancel</button>
+      <button id="saveMovie">Save</button>
+      <button id="cancelMovie">Cancel</button>
     </div>
   </div>
 </div>
@@ -94,13 +69,5 @@
 </div>
 
 <script type="module" src="movies.js"></script>
-
-<script>
-  // ✅ Back routing
-  document.getElementById("backBtn").onclick = () => {
-    window.location.href = "stuffs.html";
-  };
-</script>
-
 </body>
 </html>
