@@ -226,3 +226,11 @@ button:active {
   color: black;
   box-shadow: 0 0 16px rgba(76,201,255,.9);
 }
+.genre-row {
+  display: flex;
+  gap: 8px;
+}
+
+#newGenre {
+  margin-top: 6px;
+}
