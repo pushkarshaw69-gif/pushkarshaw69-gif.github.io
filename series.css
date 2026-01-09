@@ -5,16 +5,24 @@ body {
   padding: 20px;
 }
 
-/* TITLE */
 .title {
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
+
+/* STATS */
+.stats {
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+.stats .seen { color: #00ff9c; }
+.stats .unseen { color: #ff4d4d; }
 
 /* CONTROLS */
 .controls {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
   flex-wrap: wrap;
 }
@@ -32,14 +40,17 @@ body {
   box-shadow: 0 0 10px rgba(76,201,255,.4);
 }
 
-/* ADD BUTTON */
-#toggleForm {
-  display: block;
-  margin: 12px auto;
-  cursor: pointer;
+.filter.active {
+  background: #4cc9ff;
+  color: black;
 }
 
 /* ADD FORM */
+#toggleForm {
+  display: block;
+  margin: 12px auto;
+}
+
 #seriesForm {
   max-width: 900px;
   margin: 10px auto;
@@ -48,42 +59,28 @@ body {
   gap: 10px;
 }
 
-@media (max-width: 700px) {
-  #seriesForm {
-    grid-template-columns: 1fr;
-  }
+@media (max-width:700px){
+  #seriesForm { grid-template-columns: 1fr; }
 }
 
-/* SERIES ROW */
+/* ROW */
 .series-row {
   border: 2px solid #4cc9ff;
   margin: 10px auto;
   max-width: 900px;
   padding: 12px;
-  box-shadow: 0 0 12px rgba(76,201,255,.35);
   display: flex;
   justify-content: space-between;
   align-items: center;
+  box-shadow: 0 0 12px rgba(76,201,255,.35);
 }
 
-/* SERIES DETAILS */
 .series-text {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  font-size: 14px;
 }
 
-.series-text > * {
-  padding-bottom: 4px;
-  border-bottom: 1px solid rgba(76,201,255,.25);
-}
-
-.series-text > *:last-child {
-  border-bottom: none;
-}
-
-/* TAGS */
 .tag {
   display: inline-block;
   margin-right: 6px;
@@ -93,32 +90,47 @@ body {
   font-size: 12px;
 }
 
+/* SEEN TAG */
+.status {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  border: 1px solid;
+}
+.status.seen {
+  color: #00ff9c;
+  border-color: #00ff9c;
+}
+.status.unseen {
+  color: #ff4d4d;
+  border-color: #ff4d4d;
+}
+
 /* ACTIONS */
 .series-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
+  align-items: center;
 }
 
 .series-actions button {
   background: none;
   border: none;
-  font-size: 18px;
   color: #4cc9ff;
+  font-size: 18px;
   cursor: pointer;
 }
 
-/* VISIBILITY */
-.hidden {
-  display: none !important;
-}
-
 /* OVERLAYS */
+.hidden { display: none !important; }
+
 .confirm,
 .edit-overlay {
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.75);
-  z-index: 999;
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -130,7 +142,6 @@ body {
   background: black;
   border: 2px solid #4cc9ff;
   padding: 20px;
-  box-shadow: 0 0 15px #4cc9ff;
   max-width: 600px;
   width: 100%;
 }
