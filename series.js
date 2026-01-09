@@ -14,44 +14,34 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
-/* =====================
-   STATE
-===================== */
+/* STATE */
 let series = [];
-let editingId = null;
-let deleteId = null;
 let genres = [];
 let editGenres = [];
+let editingId = null;
+let deleteId = null;
 let currentUser = null;
 
-/* =====================
-   ELEMENTS
-===================== */
+/* ELEMENTS */
 const addBtn = document.getElementById("addBtn");
 const seriesForm = document.getElementById("seriesForm");
 const seriesList = document.getElementById("seriesList");
 
 const nameInput = document.getElementById("name");
 const seasonsInput = document.getElementById("seasons");
-
 const genreInput = document.getElementById("genreInput");
 const genreTags = document.getElementById("genreTags");
 
-/* EDIT */
 const editOverlay = document.getElementById("editOverlay");
 const editName = document.getElementById("editName");
 const editSeasons = document.getElementById("editSeasons");
 const editGenreTags = document.getElementById("editGenreTags");
 
-/* =====================
-   UI
-===================== */
+/* UI */
 addBtn.onclick = () =>
   seriesForm.classList.toggle("hidden");
 
-/* =====================
-   GENRE INPUT (ADD)
-===================== */
+/* GENRE INPUT */
 genreInput.onkeydown = e => {
   if (e.key !== "Enter") return;
   e.preventDefault();
@@ -60,11 +50,11 @@ genreInput.onkeydown = e => {
   if (!g || genres.includes(g)) return;
 
   genres.push(g);
-  renderGenreTags(genreTags, genres);
+  renderTags(genreTags, genres);
   genreInput.value = "";
 };
 
-function renderGenreTags(container, list) {
+function renderTags(container, list) {
   container.innerHTML = "";
   list.forEach(g => {
     const tag = document.createElement("span");
@@ -72,17 +62,15 @@ function renderGenreTags(container, list) {
     tag.textContent = `#${g}`;
     tag.onclick = () => {
       list.splice(list.indexOf(g), 1);
-      renderGenreTags(container, list);
+      renderTags(container, list);
     };
     container.appendChild(tag);
   });
 }
 
-/* =====================
-   ADD SERIES (PER USER)
-===================== */
+/* ADD */
 window.addSeries = async () => {
-  if (!nameInput.value.trim() || !currentUser) return;
+  if (!currentUser || !nameInput.value.trim()) return;
 
   await addDoc(collection(db, "series"), {
     uid: currentUser.uid,
@@ -95,12 +83,10 @@ window.addSeries = async () => {
   nameInput.value = "";
   seasonsInput.value = "";
   genres = [];
-  renderGenreTags(genreTags, genres);
+  renderTags(genreTags, genres);
 };
 
-/* =====================
-   LOAD SERIES (PER USER)
-===================== */
+/* LOAD */
 function loadSeries() {
   const q = query(
     collection(db, "series"),
@@ -114,9 +100,7 @@ function loadSeries() {
   });
 }
 
-/* =====================
-   RENDER
-===================== */
+/* RENDER */
 function renderSeries(list) {
   seriesList.innerHTML = "";
 
@@ -141,9 +125,7 @@ function renderSeries(list) {
   });
 }
 
-/* =====================
-   EDIT
-===================== */
+/* EDIT */
 window.editSeries = id => {
   const s = series.find(x => x.id === id);
   if (!s) return;
@@ -153,7 +135,7 @@ window.editSeries = id => {
   editSeasons.value = s.seasons;
   editGenres = [...(s.genres || [])];
 
-  renderGenreTags(editGenreTags, editGenres);
+  renderTags(editGenreTags, editGenres);
   editOverlay.classList.remove("hidden");
 };
 
@@ -170,9 +152,7 @@ window.saveEdit = async () => {
 window.closeEdit = () =>
   editOverlay.classList.add("hidden");
 
-/* =====================
-   DELETE
-===================== */
+/* DELETE */
 window.askDelete = id => {
   deleteId = id;
   document.getElementById("confirmBox").classList.remove("hidden");
@@ -186,9 +166,7 @@ window.confirmDelete = async () => {
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
 
-/* =====================
-   AUTH INIT
-===================== */
+/* AUTH */
 onAuthStateChanged(auth, user => {
   if (!user) {
     location.href = "index.html";
