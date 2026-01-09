@@ -57,9 +57,13 @@ saveSeriesBtn.onclick = async () => {
   if (!name || !seasons) return alert("Name and seasons required");
 
   await addDoc(collection(db, "series"), {
-    uid: user.uid,
-    name, seasons, genres
-  });
+  uid: user.uid,
+  name,
+  seasons,
+  genres,
+  seen: false   // 👈 ADD THIS
+});
+
 
   seriesForm.classList.add("hidden");
   nameInput.value = seasonsInput.value = genresInput.value = "";
