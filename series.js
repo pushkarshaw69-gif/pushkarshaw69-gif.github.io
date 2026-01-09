@@ -1,178 +1,151 @@
 import { auth, db } from "./firebase.js";
 import {
-  collection,
-  addDoc,
-  deleteDoc,
-  updateDoc,
-  doc,
-  query,
-  onSnapshot,
-  orderBy,
-  where
+  collection, addDoc, deleteDoc, updateDoc,
+  doc, query, where, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
-/* STATE */
 let series = [];
-let genres = [];
-let editGenres = [];
-let editingId = null;
+let editId = null;
 let deleteId = null;
-let currentUser = null;
+let user = null;
 
 /* ELEMENTS */
-const addBtn = document.getElementById("addBtn");
 const seriesForm = document.getElementById("seriesForm");
 const seriesList = document.getElementById("seriesList");
+const confirmBox = document.getElementById("confirmBox");
+const editOverlay = document.getElementById("editOverlay");
 
+const toggleForm = document.getElementById("toggleForm");
+const saveSeriesBtn = document.getElementById("saveSeries");
+
+const sortNameBtn = document.getElementById("sortName");
+const sortSeasonsBtn = document.getElementById("sortSeasons");
+const searchInput = document.getElementById("search");
+
+const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
+const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
+const saveEditBtn = document.getElementById("saveEditBtn");
+const cancelEditBtn = document.getElementById("cancelEditBtn");
+
+/* INPUTS */
 const nameInput = document.getElementById("name");
 const seasonsInput = document.getElementById("seasons");
-const genreInput = document.getElementById("genreInput");
-const genreTags = document.getElementById("genreTags");
+const genresInput = document.getElementById("genres");
 
-const editOverlay = document.getElementById("editOverlay");
 const editName = document.getElementById("editName");
 const editSeasons = document.getElementById("editSeasons");
-const editGenreTags = document.getElementById("editGenreTags");
+const editGenres = document.getElementById("editGenres");
 
-/* UI */
-addBtn.onclick = () =>
-  seriesForm.classList.toggle("hidden");
-
-/* GENRE INPUT */
-genreInput.onkeydown = e => {
-  if (e.key !== "Enter") return;
-  e.preventDefault();
-
-  const g = genreInput.value.trim();
-  if (!g || genres.includes(g)) return;
-
-  genres.push(g);
-  renderTags(genreTags, genres);
-  genreInput.value = "";
-};
-
-function renderTags(container, list) {
-  container.innerHTML = "";
-  list.forEach(g => {
-    const tag = document.createElement("span");
-    tag.className = "genre-tag";
-    tag.textContent = `#${g}`;
-    tag.onclick = () => {
-      list.splice(list.indexOf(g), 1);
-      renderTags(container, list);
-    };
-    container.appendChild(tag);
-  });
-}
+/* AUTH */
+onAuthStateChanged(auth, u => {
+  if (!u) location.href = "index.html";
+  user = u;
+  loadSeries();
+});
 
 /* ADD */
-window.addSeries = async () => {
-  if (!currentUser || !nameInput.value.trim()) return;
+toggleForm.onclick = () => seriesForm.classList.toggle("hidden");
+
+saveSeriesBtn.onclick = async () => {
+  const name = nameInput.value.trim();
+  const seasons = Number(seasonsInput.value);
+  const genres = genresInput.value.split(",").map(g=>g.trim()).filter(Boolean);
+
+  if (!name || !seasons) return alert("Name and seasons required");
 
   await addDoc(collection(db, "series"), {
-    uid: currentUser.uid,
-    name: nameInput.value.trim(),
-    seasons: Number(seasonsInput.value),
-    genres
+    uid: user.uid,
+    name, seasons, genres
   });
 
   seriesForm.classList.add("hidden");
-  nameInput.value = "";
-  seasonsInput.value = "";
-  genres = [];
-  renderTags(genreTags, genres);
+  nameInput.value = seasonsInput.value = genresInput.value = "";
 };
 
 /* LOAD */
 function loadSeries() {
-  const q = query(
-    collection(db, "series"),
-    where("uid", "==", currentUser.uid),
-    orderBy("name")
-  );
-
+  const q = query(collection(db, "series"), where("uid", "==", user.uid));
   onSnapshot(q, snap => {
     series = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderSeries(series);
+    render(series);
   });
 }
 
 /* RENDER */
-function renderSeries(list) {
+function render(list) {
   seriesList.innerHTML = "";
 
   list.forEach(s => {
-    seriesList.innerHTML += `
-      <div class="series-row">
-        <div class="series-actions">
-          <button onclick="editSeries('${s.id}')">✏️</button>
-          <button onclick="askDelete('${s.id}')">🗑️</button>
-        </div>
+    const row = document.createElement("div");
+    row.className = "series-row";
 
-        <div class="series-name">${s.name}</div>
-        <div class="series-meta">${s.seasons} seasons</div>
-
-        <div class="series-tags">
-          ${(s.genres || []).map(g =>
-            `<span class="genre-tag">#${g}</span>`
-          ).join("")}
-        </div>
+    row.innerHTML = `
+      <div class="series-text">
+        <strong>${s.name}</strong>
+        <span>${s.seasons} seasons</span>
+        <div>${(s.genres||[]).map(g=>`<span class="tag">#${g}</span>`).join("")}</div>
+      </div>
+      <div class="series-actions">
+        <button class="edit-btn">✏️</button>
+        <button class="del-btn">🗑️</button>
       </div>
     `;
+
+    row.querySelector(".edit-btn").onclick = () => openEdit(s.id);
+    row.querySelector(".del-btn").onclick = () => askDelete(s.id);
+
+    seriesList.appendChild(row);
   });
 }
 
-/* EDIT */
-window.editSeries = id => {
-  const s = series.find(x => x.id === id);
-  if (!s) return;
+/* SEARCH */
+searchInput.oninput = () => {
+  const q = searchInput.value.toLowerCase();
+  render(series.filter(s =>
+    s.name.toLowerCase().includes(q) ||
+    (s.genres||[]).some(g=>g.toLowerCase().includes(q))
+  ));
+};
 
-  editingId = id;
+/* SORT */
+sortNameBtn.onclick = () =>
+  render([...series].sort((a,b)=>a.name.localeCompare(b.name)));
+sortSeasonsBtn.onclick = () =>
+  render([...series].sort((a,b)=>a.seasons-b.seasons));
+
+/* EDIT */
+function openEdit(id) {
+  const s = series.find(x=>x.id===id);
+  editId = id;
+
   editName.value = s.name;
   editSeasons.value = s.seasons;
-  editGenres = [...(s.genres || [])];
+  editGenres.value = (s.genres||[]).join(", ");
 
-  renderTags(editGenreTags, editGenres);
   editOverlay.classList.remove("hidden");
-};
+}
 
-window.saveEdit = async () => {
-  await updateDoc(doc(db, "series", editingId), {
-    name: editName.value.trim(),
+saveEditBtn.onclick = async () => {
+  await updateDoc(doc(db,"series",editId),{
+    name: editName.value,
     seasons: Number(editSeasons.value),
-    genres: editGenres
+    genres: editGenres.value.split(",").map(g=>g.trim()).filter(Boolean)
   });
-
   editOverlay.classList.add("hidden");
 };
 
-window.closeEdit = () =>
-  editOverlay.classList.add("hidden");
+cancelEditBtn.onclick = () => editOverlay.classList.add("hidden");
 
 /* DELETE */
-window.askDelete = id => {
+function askDelete(id) {
   deleteId = id;
-  document.getElementById("confirmBox").classList.remove("hidden");
+  confirmBox.classList.remove("hidden");
+}
+confirmDeleteBtn.onclick = async () => {
+  await deleteDoc(doc(db,"series",deleteId));
+  confirmBox.classList.add("hidden");
 };
-
-window.confirmDelete = async () => {
-  await deleteDoc(doc(db, "series", deleteId));
-  closeConfirm();
-};
-
-window.closeConfirm = () =>
-  document.getElementById("confirmBox").classList.add("hidden");
-
-/* AUTH */
-onAuthStateChanged(auth, user => {
-  if (!user) {
-    location.href = "index.html";
-    return;
-  }
-
-  currentUser = user;
-  loadSeries();
-});
+cancelDeleteBtn.onclick = () => confirmBox.classList.add("hidden");
