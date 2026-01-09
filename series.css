@@ -145,3 +145,24 @@ body {
   background: #ff2b2b;
   color: black;
 }
+
+.status {
+  margin-left: 8px;
+  padding: 2px 8px;
+  font-size: 11px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+
+.status.seen {
+  color: #00ff9c;
+  border-color: #00ff9c;
+}
+
+.status.unseen {
+  color: #ff4d4d;
+  border-color: #ff4d4d;
+}
+.seen-toggle {
+  accent-color: #4cc9ff;
+}
