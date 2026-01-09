@@ -7,6 +7,7 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
+let currentFilter = "all";
 let series = [];
 let editId = null;
 let deleteId = null;
@@ -29,6 +30,17 @@ const confirmDeleteBtn = document.getElementById("confirmDeleteBtn");
 const cancelDeleteBtn = document.getElementById("cancelDeleteBtn");
 const saveEditBtn = document.getElementById("saveEditBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
+document.querySelectorAll(".filter").forEach(btn => {
+  btn.onclick = () => {
+    document.querySelectorAll(".filter")
+      .forEach(b => b.classList.remove("active"));
+
+    btn.classList.add("active");
+    currentFilter = btn.dataset.filter;
+    applyFilters();
+  };
+});
+
 
 /* INPUTS */
 const nameInput = document.getElementById("name");
@@ -74,8 +86,21 @@ function loadSeries() {
   const q = query(collection(db, "series"), where("uid", "==", user.uid));
   onSnapshot(q, snap => {
     series = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    render(series);
+    applyFilters();
   });
+}
+function applyFilters() {
+  let list = [...series];
+
+  if (currentFilter === "seen") {
+    list = list.filter(s => s.seen);
+  }
+
+  if (currentFilter === "unseen") {
+    list = list.filter(s => !s.seen);
+  }
+
+  render(list);
 }
 
 /* RENDER */
