@@ -1,4 +1,4 @@
-import { db } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 import {
   collection,
   addDoc,
@@ -7,8 +7,12 @@ import {
   doc,
   query,
   onSnapshot,
-  orderBy
+  orderBy,
+  where
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+import {
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 /* =====================
    STATE
@@ -18,6 +22,7 @@ let editingId = null;
 let deleteId = null;
 let genres = [];
 let editGenres = [];
+let currentUser = null;
 
 /* =====================
    ELEMENTS
@@ -74,12 +79,13 @@ function renderGenreTags(container, list) {
 }
 
 /* =====================
-   ADD SERIES
+   ADD SERIES (PER USER)
 ===================== */
 window.addSeries = async () => {
-  if (!nameInput.value.trim()) return;
+  if (!nameInput.value.trim() || !currentUser) return;
 
   await addDoc(collection(db, "series"), {
+    uid: currentUser.uid,
     name: nameInput.value.trim(),
     seasons: Number(seasonsInput.value),
     genres
@@ -93,10 +99,14 @@ window.addSeries = async () => {
 };
 
 /* =====================
-   LOAD SERIES
+   LOAD SERIES (PER USER)
 ===================== */
 function loadSeries() {
-  const q = query(collection(db, "series"), orderBy("name"));
+  const q = query(
+    collection(db, "series"),
+    where("uid", "==", currentUser.uid),
+    orderBy("name")
+  );
 
   onSnapshot(q, snap => {
     series = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -136,8 +146,9 @@ function renderSeries(list) {
 ===================== */
 window.editSeries = id => {
   const s = series.find(x => x.id === id);
-  editingId = id;
+  if (!s) return;
 
+  editingId = id;
   editName.value = s.name;
   editSeasons.value = s.seasons;
   editGenres = [...(s.genres || [])];
@@ -176,6 +187,14 @@ window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
 
 /* =====================
-   INIT
+   AUTH INIT
 ===================== */
-loadSeries();
+onAuthStateChanged(auth, user => {
+  if (!user) {
+    location.href = "index.html";
+    return;
+  }
+
+  currentUser = user;
+  loadSeries();
+});
