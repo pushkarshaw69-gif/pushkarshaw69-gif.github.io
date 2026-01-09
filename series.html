@@ -24,7 +24,12 @@
 <div id="seriesForm" class="hidden">
   <input id="name" placeholder="Series name">
   <input id="seasons" type="number" placeholder="Seasons">
-  <input id="genres" placeholder="Genres (comma separated)">
+  <div class="genre-row">
+  <select id="genreSelect"></select>
+  <button type="button" id="addGenreBtn">＋</button>
+</div>
+
+<input id="newGenre" class="hidden" placeholder="New genre">
   <button id="saveSeries">Save</button>
 </div>
 
