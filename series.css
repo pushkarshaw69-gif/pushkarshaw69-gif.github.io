@@ -34,6 +34,9 @@ body {
 
 /* ADD BUTTON */
 #toggleForm {
+  display: block;
+  margin: 16px auto;   /* 👈 this is the key */
+  text-align: center;
   border: 2px solid #4cc9ff;
   background: linear-gradient(
     90deg,
