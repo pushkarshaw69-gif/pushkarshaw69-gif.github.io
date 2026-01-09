@@ -20,8 +20,8 @@ let deleteId = null;
 /* =====================
    ELEMENTS
 ===================== */
+const addBtn = document.getElementById("addBtn");
 const seriesForm = document.getElementById("seriesForm");
-const toggleFormBtn = document.getElementById("addBtn");
 const seriesList = document.getElementById("seriesList");
 
 const nameInput = document.getElementById("name");
@@ -40,8 +40,8 @@ const editGenre = document.getElementById("editGenre");
 /* =====================
    UI
 ===================== */
-toggleFormBtn.onclick =
-  () => seriesForm.classList.toggle("hidden");
+addBtn.onclick = () =>
+  seriesForm.classList.toggle("hidden");
 
 addGenreBtn.onclick = () => {
   newGenreInput.classList.toggle("hidden");
@@ -62,7 +62,6 @@ function loadGenres(select = null) {
 
       snap.forEach(d => {
         const g = d.data().name;
-
         genreSelect.innerHTML += `<option>${g}</option>`;
         editGenre.innerHTML += `<option>${g}</option>`;
       });
@@ -126,7 +125,7 @@ function renderSeries(list) {
 
         <p class="series-name">${s.name}</p>
         <p class="series-meta">
-          ${s.seasons} season${s.seasons > 1 ? "s" : ""} · ${s.genre}
+          ${s.seasons} season${s.seasons !== 1 ? "s" : ""} · ${s.genre}
         </p>
       </div>
     `;
