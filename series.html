@@ -8,6 +8,7 @@
 <body>
 
 <h1 class="title">📺 SERIES ARCHIVE</h1>
+
 <div class="filters">
   <button data-filter="all" class="filter active">All</button>
   <button data-filter="seen" class="filter">Seen</button>
@@ -24,12 +25,15 @@
 <div id="seriesForm" class="hidden">
   <input id="name" placeholder="Series name">
   <input id="seasons" type="number" placeholder="Seasons">
-  <div class="genre-row">
-  <select id="genreSelect"></select>
-  <button type="button" id="addGenreBtn">＋</button>
-</div>
 
-<input id="newGenre" class="hidden" placeholder="New genre">
+  <!-- GENRE INPUT (DATALIST STYLE) -->
+  <input
+    id="genreInput"
+    list="genreList"
+    placeholder="Genres (comma separated)"
+  >
+  <datalist id="genreList"></datalist>
+
   <button id="saveSeries">Save</button>
 </div>
 
@@ -64,4 +68,4 @@
 
 <script type="module" src="series.js"></script>
 </body>
-</html>
+      </html>
