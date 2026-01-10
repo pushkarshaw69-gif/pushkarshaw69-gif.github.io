@@ -1,4 +1,15 @@
 /* ===============================
+   IMPORTS
+================================ */
+import { auth, db } from "./firebase.js";
+import {
+  collection, addDoc, deleteDoc, updateDoc,
+  doc, query, where, onSnapshot
+} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
+import { onAuthStateChanged } from
+  "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+
+/* ===============================
    ROUTE GUARD + LIBRARY TYPE
 ================================ */
 import { requireAuth } from "./auth-guard.js";
@@ -21,16 +32,6 @@ const COLLECTION_NAME =
     ? "books_fiction"
     : "books_nonfiction";
 
-/* ===============================
-   IMPORTS
-================================ */
-import { auth, db } from "./firebase.js";
-import {
-  collection, addDoc, deleteDoc, updateDoc,
-  doc, query, where, onSnapshot
-} from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
-import { onAuthStateChanged } from
-  "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 
 /* ===============================
    STATE
@@ -101,7 +102,7 @@ window.addBook = async () => {
     uid: currentUser.uid,
     title: titleInput.value,
     author: authorInput.value,
-    category: categoryInput.value,
+    category: categoryInput ? categoryInput.value : "",
     date: dateInput.value,
     read: false
   });
@@ -230,5 +231,6 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
+
 
 
