@@ -89,6 +89,7 @@ window.addBook = async () => {
     category: categoryInput ? categoryInput.value : "",
     date: dateInput.value,
     read: false
+   owned: false
   });
 
   bookForm.classList.add("hidden");
@@ -135,6 +136,13 @@ function renderBooks(list) {
           <button onclick="toggleRead('${b.id}', ${b.read})">
             ${b.read ? "✅" : "⬜"}
           </button>
+          <button
+               class="owned-toggle ${b.owned ? "owned" : ""}"
+               onclick="toggleOwned('${b.id}', ${b.owned})"
+               title="Owned"
+            >
+            📘
+           </button>
           <button onclick="editBook('${b.id}')">✏️</button>
           <button onclick="askDelete('${b.id}')">🗑️</button>
         </div>
@@ -175,6 +183,9 @@ window.sortByDate = () =>
 ================================ */
 window.toggleRead = async (id, current) =>
   updateDoc(doc(db, COLLECTION_NAME, id), { read: !current });
+window.toggleOwned = async (id, current) =>
+  updateDoc(doc(db, COLLECTION_NAME, id), { owned: !current });
+
 
 /* ===============================
    EDIT
@@ -217,4 +228,5 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
+
 
