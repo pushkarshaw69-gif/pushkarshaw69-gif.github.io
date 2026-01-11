@@ -6,8 +6,8 @@ import {
   collection, addDoc, deleteDoc, updateDoc,
   doc, query, where, onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
-import { onAuthStateChanged } from
-  "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
+import { onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
 import { requireAuth } from "./auth-guard.js";
 
 /* ===============================
@@ -24,9 +24,12 @@ const COLLECTION_NAME = "books_fiction";
    STATE
 ================================ */
 let books = [];
+let currentUser = null;
 let editingId = null;
 let deleteId = null;
-let currentUser = null;
+
+let currentFilter = "all";
+let sortMode = "recent";
 
 /* ===============================
    ELEMENTS
@@ -38,6 +41,9 @@ const dateInput = document.getElementById("date");
 const bookList = document.getElementById("bookList");
 const searchInput = document.getElementById("search");
 const bookForm = document.getElementById("bookForm");
+
+const recentBtn = document.getElementById("recentBtn");
+const filterSelect = document.getElementById("filterSelect");
 
 const totalCount = document.getElementById("totalCount");
 const readCount = document.getElementById("readCount");
@@ -72,16 +78,6 @@ onAuthStateChanged(auth, user => {
 window.addBook = async () => {
   if (!titleInput.value || !authorInput.value) return;
 
-  const exists = books.some(b =>
-    b.title.toLowerCase() === titleInput.value.toLowerCase() &&
-    b.author.toLowerCase() === authorInput.value.toLowerCase()
-  );
-
-  if (exists) {
-    alert("This book already exists.");
-    return;
-  }
-
   await addDoc(collection(db, COLLECTION_NAME), {
     uid: currentUser.uid,
     title: titleInput.value,
@@ -89,7 +85,8 @@ window.addBook = async () => {
     category: categoryInput ? categoryInput.value : "",
     date: dateInput.value,
     read: false,
-    owned: false   // 👈 ADDED
+    owned: false,
+    createdAt: Date.now() // 🔥 required for recent
   });
 
   bookForm.classList.add("hidden");
@@ -108,68 +105,55 @@ function loadBooks() {
 
   onSnapshot(q, snap => {
     books = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-    renderBooks(books);
+    applyView();
   });
 }
 
 /* ===============================
-   RENDER
+   VIEW LOGIC (FILTER + SORT)
 ================================ */
-function renderBooks(list) {
-  bookList.innerHTML = "";
+function applyView() {
+  let list = [...books];
 
-  list.forEach(b => {
-    bookList.innerHTML += `
-      <div class="book-row-wrapper">
+  // FILTER
+  switch (currentFilter) {
+    case "owned":
+      list = list.filter(b => b.owned);
+      break;
+    case "not-owned":
+      list = list.filter(b => !b.owned);
+      break;
+    case "read":
+      list = list.filter(b => b.read);
+      break;
+    case "not-read":
+      list = list.filter(b => !b.read);
+      break;
+  }
 
-        <!-- LEFT ICON (OUTSIDE CARD) -->
-        <span class="owned-icon ${b.owned ? "owned" : "not-owned"}">📘</span>
+  // SORT
+  if (sortMode === "recent") {
+    list.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  }
 
-        <!-- BOOK CARD -->
-        <div class="book-row ${b.read ? "read" : ""}">
-          <div>
-            <span class="book-title">${b.title}</span>
-            <span class="book-author">— ${b.author}</span>
-            <span class="status-badge ${b.read ? "read" : "unread"}">
-              ${b.read ? "READ" : "UNREAD"}
-            </span>
-          </div>
-
-          <div>
-            <span>${b.category || ""}</span><br>
-            <span>${b.date || ""}</span>
-          </div>
-        </div>
-
-        <!-- ACTIONS (RIGHT SIDE) -->
-        <div class="book-actions">
-
-          <!-- OWNED CHECKBOX -->
-          <input
-            type="checkbox"
-            ${b.owned ? "checked" : ""}
-            onchange="toggleOwned('${b.id}', this.checked)"
-            title="Owned"
-          >
-
-          <!-- READ CHECKBOX -->
-          <button onclick="toggleRead('${b.id}', ${b.read})">
-            ${b.read ? "✅" : "⬜"}
-          </button>
-
-          <button onclick="editBook('${b.id}')">✏️</button>
-          <button onclick="askDelete('${b.id}')">🗑️</button>
-        </div>
-
-      </div>
-    `;
-  });
-
-  totalCount.textContent = list.length;
-  readCount.textContent = list.filter(b => b.read).length;
-  unreadCount.textContent = list.filter(b => !b.read).length;
+  renderBooks(list);
 }
 
+/* ===============================
+   CONTROLS
+================================ */
+recentBtn.onclick = () => {
+  sortMode = "recent";
+  currentFilter = "all";
+  filterSelect.value = "all";
+  applyView();
+};
+
+filterSelect.onchange = () => {
+  currentFilter = filterSelect.value;
+  sortMode = "none";
+  applyView();
+};
 
 /* ===============================
    SEARCH
@@ -186,13 +170,52 @@ searchInput.oninput = () => {
 };
 
 /* ===============================
-   SORT
+   RENDER
 ================================ */
-window.sortByName = () =>
-  renderBooks([...books].sort((a,b)=>a.title.localeCompare(b.title)));
+function renderBooks(list) {
+  bookList.innerHTML = "";
 
-window.sortByDate = () =>
-  renderBooks([...books].sort((a,b)=>new Date(b.date)-new Date(a.date)));
+  list.forEach(b => {
+    bookList.innerHTML += `
+      <div class="book-row-wrapper">
+
+        <span class="owned-icon ${b.owned ? "owned" : ""}">📘</span>
+
+        <div class="book-row ${b.read ? "read" : ""}">
+          <div>
+            <span class="book-title">${b.title}</span>
+            <span class="book-author">— ${b.author}</span>
+            <span class="status-badge ${b.read ? "read" : "unread"}">
+              ${b.read ? "READ" : "UNREAD"}
+            </span>
+          </div>
+          <div>
+            <span>${b.category || ""}</span><br>
+            <span>${b.date || ""}</span>
+          </div>
+        </div>
+
+        <div class="book-actions">
+          <input type="checkbox"
+            ${b.owned ? "checked" : ""}
+            onchange="toggleOwned('${b.id}', this.checked)"
+          >
+
+          <button onclick="toggleRead('${b.id}', ${b.read})">
+            ${b.read ? "✅" : "⬜"}
+          </button>
+
+          <button onclick="editBook('${b.id}')">✏️</button>
+          <button onclick="askDelete('${b.id}')">🗑️</button>
+        </div>
+      </div>
+    `;
+  });
+
+  totalCount.textContent = list.length;
+  readCount.textContent = list.filter(b => b.read).length;
+  unreadCount.textContent = list.filter(b => !b.read).length;
+}
 
 /* ===============================
    TOGGLES
@@ -244,4 +267,3 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
-
