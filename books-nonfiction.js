@@ -1,5 +1,5 @@
 /* ===============================
-   IMPORTS
+   IMPORTS (MUST BE FIRST)
 ================================ */
 import { auth, db } from "./firebase.js";
 import {
@@ -8,19 +8,16 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.7.0/firebase-firestore.js";
 import { onAuthStateChanged } from
   "https://www.gstatic.com/firebasejs/12.7.0/firebase-auth.js";
-
-
-/* ===============================
-   ROUTE GUARD + LIBRARY TYPE
-================================ */
 import { requireAuth } from "./auth-guard.js";
 
+/* ===============================
+   ROUTE GUARD
+================================ */
 requireAuth();
 
-const pageContent = document.getElementById("pageContent");
-
-
-/* FIRESTORE COLLECTION */
+/* ===============================
+   FIRESTORE COLLECTION
+================================ */
 const COLLECTION_NAME = "books_nonfiction";
 
 /* ===============================
@@ -55,10 +52,7 @@ const editDate = document.getElementById("editDate");
 /* ===============================
    UI INIT
 ================================ */
-document.querySelector(".title").textContent =
-  libraryType === "fiction"
-    ? "📖 FICTION ARCHIVE"
-    : "📚 NON-FICTION ARCHIVE";
+document.querySelector(".title").textContent = "📖 FICTION ARCHIVE";
 
 document.getElementById("toggleForm").onclick =
   () => bookForm.classList.toggle("hidden");
@@ -98,7 +92,8 @@ window.addBook = async () => {
   });
 
   bookForm.classList.add("hidden");
-  titleInput.value = authorInput.value = categoryInput.value = dateInput.value = "";
+  titleInput.value = authorInput.value = dateInput.value = "";
+  if (categoryInput) categoryInput.value = "";
 };
 
 /* ===============================
@@ -133,8 +128,8 @@ function renderBooks(list) {
           </span>
         </div>
         <div>
-          <span>${b.category}</span><br>
-          <span>${b.date}</span>
+          <span>${b.category || ""}</span><br>
+          <span>${b.date || ""}</span>
         </div>
         <div class="book-actions">
           <button onclick="toggleRead('${b.id}', ${b.read})">
@@ -147,9 +142,9 @@ function renderBooks(list) {
     `;
   });
 
-  totalCount.textContent = books.length;
-  readCount.textContent = books.filter(b => b.read).length;
-  unreadCount.textContent = books.filter(b => !b.read).length;
+  totalCount.textContent = list.length;
+  readCount.textContent = list.filter(b => b.read).length;
+  unreadCount.textContent = list.filter(b => !b.read).length;
 }
 
 /* ===============================
@@ -161,7 +156,7 @@ searchInput.oninput = () => {
     books.filter(b =>
       b.title.toLowerCase().includes(q) ||
       b.author.toLowerCase().includes(q) ||
-      b.category.toLowerCase().includes(q)
+      (b.category || "").toLowerCase().includes(q)
     )
   );
 };
@@ -189,8 +184,8 @@ window.editBook = id => {
   editingId = id;
   editTitle.value = b.title;
   editAuthor.value = b.author;
-  editCategory.value = b.category;
-  editDate.value = b.date;
+  editCategory.value = b.category || "";
+  editDate.value = b.date || "";
   editOverlay.classList.remove("hidden");
 };
 
@@ -204,7 +199,8 @@ window.saveEdit = async () => {
   editOverlay.classList.add("hidden");
 };
 
-window.closeEdit = () => editOverlay.classList.add("hidden");
+window.closeEdit = () =>
+  editOverlay.classList.add("hidden");
 
 /* ===============================
    DELETE
@@ -221,10 +217,3 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
-
-
-
-
-
-
-
