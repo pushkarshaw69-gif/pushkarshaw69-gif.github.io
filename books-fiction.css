@@ -195,5 +195,31 @@ body {
   z-index: -1;
 }
 
+/* OWNED TOGGLE */
+.owned-wrapper {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+/* hide checkbox */
+.owned-checkbox {
+  display: none;
+}
+
+/* book icon base */
+.owned-icon {
+  font-size: 20px;
+  margin-right: 6px;
+  color: #ff2b2b;       /* RED = not owned */
+  transition: all 0.2s ease;
+}
+
+/* owned = blue */
+.owned-checkbox:checked + .owned-icon {
+  color: #00aaff;       /* BLUE = owned */
+  text-shadow: 0 0 10px rgba(0,170,255,0.9);
+}
+
 
 
