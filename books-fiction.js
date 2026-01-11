@@ -88,7 +88,8 @@ window.addBook = async () => {
     author: authorInput.value,
     category: categoryInput ? categoryInput.value : "",
     date: dateInput.value,
-    read: false
+    read: false,
+    owned: false   // 👈 ADDED
   });
 
   bookForm.classList.add("hidden");
@@ -127,14 +128,30 @@ function renderBooks(list) {
             ${b.read ? "READ" : "UNREAD"}
           </span>
         </div>
+
         <div>
           <span>${b.category || ""}</span><br>
           <span>${b.date || ""}</span>
         </div>
+
         <div class="book-actions">
+
+          <!-- OWNED TOGGLE -->
+          <label class="owned-wrapper">
+            <input
+              type="checkbox"
+              class="owned-checkbox"
+              ${b.owned ? "checked" : ""}
+              onchange="toggleOwned('${b.id}', this.checked)"
+            >
+            <span class="owned-icon">📘</span>
+          </label>
+
+          <!-- READ TOGGLE -->
           <button onclick="toggleRead('${b.id}', ${b.read})">
             ${b.read ? "✅" : "⬜"}
-            
+          </button>
+
           <button onclick="editBook('${b.id}')">✏️</button>
           <button onclick="askDelete('${b.id}')">🗑️</button>
         </div>
@@ -171,11 +188,13 @@ window.sortByDate = () =>
   renderBooks([...books].sort((a,b)=>new Date(b.date)-new Date(a.date)));
 
 /* ===============================
-   TOGGLE READ
+   TOGGLES
 ================================ */
 window.toggleRead = async (id, current) =>
   updateDoc(doc(db, COLLECTION_NAME, id), { read: !current });
 
+window.toggleOwned = async (id, value) =>
+  updateDoc(doc(db, COLLECTION_NAME, id), { owned: value });
 
 /* ===============================
    EDIT
@@ -218,7 +237,3 @@ window.confirmDelete = async () => {
 
 window.closeConfirm = () =>
   document.getElementById("confirmBox").classList.add("hidden");
-
-
-
-
